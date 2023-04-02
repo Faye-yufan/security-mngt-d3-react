@@ -12,62 +12,25 @@ code {
     monospace;
 }
 
+/* App.css */
 .app-container {
+  margin-top: 20px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.interactive-grid {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 30px;
-}
-
-/* ControlPanel.module.css */
-
-/* .container {
-  font-family: 'Roboto', sans-serif;
-  max-width: 400px;
-}
-
-.title {
-  font-weight: 500;
-  font-size: 24px;
-  margin-bottom: 24px;
-} */
-
-.control-panel {
-  display: flex;
-  flex-direction: column;
-}
-
-.control-panel label {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 16px;
-  font-weight: 500;
-}
-
-.control-panel input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  margin-top: 4px;
-}
-
-.control-panel button {
-  background-color: #1e88e5;
-  color: white;
-  padding: 12px;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.control-panel button:hover {
-  background-color: #1565c0;
-}
-
-.drawer-content p {
-  font-weight: bold;
 }

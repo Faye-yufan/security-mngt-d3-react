@@ -8,8 +8,8 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells }) => {
   let updatedSelectedCells = selectedCells;
 
   useEffect(() => {
-    const width = 800;
-    const height = 800;
+    const width = 700;
+    const height = 700;
 
     const svg = d3
       .select(svgRef.current)
@@ -106,15 +106,18 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells }) => {
 
   return (
     <div className="interactive-grid">
+      <svg ref={svgRef} />
+      <br />
+      <p>Adjust Selection Size</p>
       <input
+        className="interactive-grid--toggle"
         type="range"
         min="1"
         max="50"
         value={gridSize}
         onChange={(e) => setGridSize(+e.target.value)}
       />
-      <br />
-      <svg ref={svgRef} />
+      
     </div>
   );
 };

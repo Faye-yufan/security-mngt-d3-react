@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 function DropdownList() {
   const [selectedOption, setSelectedOption] = useState('Ground Floor');
@@ -9,13 +13,20 @@ function DropdownList() {
 
   return (
     <div>
-      <select value={selectedOption} onChange={handleSelect}>
-        <option value="Ground Floor">Ground Floor</option>
-        <option value="1st Floor">1st Floor</option>
-        <option value="2nd Floor">2nd Floor</option>
-        <option value="3rd Floor">3rd Floor</option>
-      </select>
-      <p>You have selected: {selectedOption}</p>
+      <FormControl fullWidth variant="outlined">
+        <InputLabel id="floor-level-label">Floor Level</InputLabel>
+        <Select
+          labelId="floor-level-label"
+          value={selectedOption}
+          onChange={handleSelect}
+          label="Floor Level"
+        >
+          <MenuItem value="Ground Floor">Ground Floor</MenuItem>
+          <MenuItem value="1st Floor">1st Floor</MenuItem>
+          <MenuItem value="2nd Floor">2nd Floor</MenuItem>
+          <MenuItem value="3rd Floor">3rd Floor</MenuItem>
+        </Select>
+      </FormControl>
     </div>
   );
 }

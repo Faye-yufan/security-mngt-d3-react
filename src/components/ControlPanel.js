@@ -1,7 +1,8 @@
-// RightDrawer.js
 import React, { useState } from 'react';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
 import Select from '@mui/material/Select';
@@ -18,7 +19,9 @@ const ControlPanel = ( {selectedCells}) => {
 
   return (
     <>
-      <Button onClick={() => setDrawerOpen(true)}>Create Assignment</Button>
+      <IconButton onClick={() => setDrawerOpen(true)} color="inherit">
+        <AddIcon />
+      </IconButton>
       <Drawer
         anchor="right"
         open={drawerOpen}
