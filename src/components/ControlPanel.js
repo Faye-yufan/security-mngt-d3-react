@@ -8,13 +8,15 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 
-const ControlPanel = () => {
+const ControlPanel = ( {selectedCells}) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [floorLevel, setFloorLevel] = useState('');
 
   const handleFloorLevelChange = (event) => {
     setFloorLevel(event.target.value);
   };
+  console.log("from control panel...")
+  console.log(selectedCells)
 
   return (
     <>
@@ -42,6 +44,14 @@ const ControlPanel = () => {
             </Select>
           </FormControl>
           <TextField fullWidth variant="outlined" margin="normal" label="Zone Name" />
+          <TextField
+                fullWidth
+                variant="outlined"
+                margin="normal"
+                label="Selected Cells"
+                value={JSON.stringify(selectedCells)}
+                InputProps={{ readOnly: true }}
+            />
           <p>Device Information</p>
           <TextField fullWidth variant="outlined" margin="normal" label="Device Name" />
           <TextField fullWidth variant="outlined" margin="normal" label="MAC Address" />

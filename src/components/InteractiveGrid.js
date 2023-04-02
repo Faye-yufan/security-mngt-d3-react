@@ -2,10 +2,10 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import backgroundImageUrl from '../asset/first-floor.png';
 
-const InteractiveGrid = () => {
+const InteractiveGrid = ({ selectedCells, setSelectedCells }) => {
   const [gridSize, setGridSize] = useState(10);
-  const [selectedCells, setSelectedCells] = useState([]);
   const svgRef = useRef();
+  let updatedSelectedCells = selectedCells;
 
   useEffect(() => {
     const width = 800;
@@ -75,7 +75,6 @@ const InteractiveGrid = () => {
 
     svg.on('click', (event) => {
       const coords = d3.pointer(event);
-      console.log(coords)
 
       const x = Math.floor(xScale.invert(coords[0]));
       const y = Math.floor(yScale.invert(coords[1]));
@@ -87,7 +86,12 @@ const InteractiveGrid = () => {
       if (!existingCell.empty()) {
         // If the cell is already highlighted, remove the highlight
         existingCell.remove();
+        updatedSelectedCells = updatedSelectedCells.filter(cell => cell.x !== x || cell.y !== y);
+        console.log(updatedSelectedCells)
+        
       } else {
+        updatedSelectedCells = [...updatedSelectedCells, { x, y }];
+        console.log(updatedSelectedCells)
         rectGroup
           .append('rect')
           .attr('id', cellId)
@@ -97,12 +101,10 @@ const InteractiveGrid = () => {
           .attr('height', yScale(1) - yScale(0))
           .attr('fill', 'yellow')
           .attr('opacity', 0.5);
+        
       }
-      // Move the image and grid lines below the rectangles
-    // gridGroup.lower();
-    // imageGroup.lower();
-    // rectGroup.upper();
     });
+    
   }, [gridSize, selectedCells]);
 
   return (
