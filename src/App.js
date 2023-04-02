@@ -6,16 +6,21 @@ import Header from './components/Header';
 
 function App() {
   const [selectedCells, setSelectedCells] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('Ground Floor');
 
   return (
     <div>
       <Header />
       <div className="app-container">
-        <DropdownList />
+        <DropdownList 
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+        />
         <div className="grid-container">
           <InteractiveGrid
             selectedCells={selectedCells}
             setSelectedCells={setSelectedCells}
+            selectedOption={selectedOption}
           />
           <ControlPanel selectedCells={selectedCells} />
         </div>

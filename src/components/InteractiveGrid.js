@@ -1,8 +1,12 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
-import backgroundImageUrl from '../asset/first-floor.png';
+import firstFloorImageUrl from '../asset/floor-1-ground.png';
+import secondFloorImageUrl from '../asset/floor-2-first.png';
+import thirdFloorImageUrl from '../asset/floor-3-second.png';
+import fourthFloorImageUrl from '../asset/floor-4-third.png';
 
-const InteractiveGrid = ({ selectedCells, setSelectedCells }) => {
+
+const InteractiveGrid = ({ selectedCells, setSelectedCells, selectedOption }) => {
   const [gridSize, setGridSize] = useState(10);
   const svgRef = useRef();
   let updatedSelectedCells = selectedCells;
@@ -22,6 +26,22 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells }) => {
 
     // Create a group for the image
     const imageGroup = svg.append('g');
+
+    const backgroundImageUrl = () => {
+      switch (selectedOption) {
+        case 'Ground Floor':
+          return firstFloorImageUrl;
+        case '1st Floor':
+          return secondFloorImageUrl;
+        case '2nd Floor':
+          return thirdFloorImageUrl;
+        case '3rd Floor':
+          return fourthFloorImageUrl;
+        default:
+          return firstFloorImageUrl;
+      }
+    };
+
     imageGroup
       .append('image')
       .attr('xlink:href', backgroundImageUrl)
@@ -102,7 +122,7 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells }) => {
       setSelectedCells(prevSelectedCells => updatedSelectedCells);
     });
     
-  }, [gridSize]);
+  }, [gridSize, selectedOption]);
 
   return (
     <div className="interactive-grid">

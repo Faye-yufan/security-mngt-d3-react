@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-function DropdownList() {
-  const [selectedOption, setSelectedOption] = useState('Ground Floor');
-
+function DropdownList({ selectedOption, setSelectedOption }) {
   const handleSelect = (e) => {
     setSelectedOption(e.target.value);
   };
