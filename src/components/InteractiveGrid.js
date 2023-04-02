@@ -75,6 +75,7 @@ const InteractiveGrid = () => {
 
     svg.on('click', (event) => {
       const coords = d3.pointer(event);
+      console.log(coords)
 
       const x = Math.floor(xScale.invert(coords[0]));
       const y = Math.floor(yScale.invert(coords[1]));
@@ -87,7 +88,6 @@ const InteractiveGrid = () => {
         // If the cell is already highlighted, remove the highlight
         existingCell.remove();
       } else {
-        // If the cell is not highlighted, add the highlight
         rectGroup
           .append('rect')
           .attr('id', cellId)
@@ -106,7 +106,7 @@ const InteractiveGrid = () => {
   }, [gridSize, selectedCells]);
 
   return (
-    <div>
+    <div className="interactive-grid">
       <input
         type="range"
         min="1"

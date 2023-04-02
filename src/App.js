@@ -1,11 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
 import InteractiveGrid from './components/InteractiveGrid';
+import ControlPanel from './components/ControlPanel';
+import DropdownList from './components/DropdownList';
 
 function App() {
   return (
-    <div className="App">
+    <div className="app-container">
+      <DropdownList />
       <InteractiveGrid />
+      <ControlPanel />
     </div>
   );
 }
