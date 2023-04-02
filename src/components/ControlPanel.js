@@ -15,8 +15,6 @@ const ControlPanel = ( {selectedCells}) => {
   const handleFloorLevelChange = (event) => {
     setFloorLevel(event.target.value);
   };
-  console.log("from control panel...")
-  console.log(selectedCells)
 
   return (
     <>

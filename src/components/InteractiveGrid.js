@@ -87,11 +87,8 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells }) => {
         // If the cell is already highlighted, remove the highlight
         existingCell.remove();
         updatedSelectedCells = updatedSelectedCells.filter(cell => cell.x !== x || cell.y !== y);
-        console.log(updatedSelectedCells)
-        
       } else {
         updatedSelectedCells = [...updatedSelectedCells, { x, y }];
-        console.log(updatedSelectedCells)
         rectGroup
           .append('rect')
           .attr('id', cellId)
@@ -101,11 +98,11 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells }) => {
           .attr('height', yScale(1) - yScale(0))
           .attr('fill', 'yellow')
           .attr('opacity', 0.5);
-        
       }
+      setSelectedCells(prevSelectedCells => updatedSelectedCells);
     });
     
-  }, [gridSize, selectedCells]);
+  }, [gridSize]);
 
   return (
     <div className="interactive-grid">
