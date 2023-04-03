@@ -74,6 +74,7 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells, selectedOption }) =>
         .attr('y1', 0)
         .attr('y2', height)
         .attr('stroke', 'grey')
+        .attr('opacity', 0.6)
         .attr('stroke-width', 1);
 
       // Horizontal lines
@@ -88,6 +89,7 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells, selectedOption }) =>
         .attr('y1', (d) => yScale(d))
         .attr('y2', (d) => yScale(d))
         .attr('stroke', 'grey')
+        .attr('opacity', 0.6)
         .attr('stroke-width', 1);
     };
 

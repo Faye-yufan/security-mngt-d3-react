@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import InteractiveGrid from './components/InteractiveGrid';
-import ControlPanel from './components/ControlPanel';
+import CreateAssignment from './components/CreateAssignment';
 import DropdownList from './components/DropdownList';
 import Header from './components/Header';
 
@@ -10,7 +10,9 @@ function App() {
 
   return (
     <div>
-      <Header />
+      <Header 
+        assignmentBtn="add"
+      />
       <div className="app-container">
         <DropdownList 
           selectedOption={selectedOption}
@@ -22,7 +24,10 @@ function App() {
             setSelectedCells={setSelectedCells}
             selectedOption={selectedOption}
           />
-          <ControlPanel selectedCells={selectedCells} />
+          <CreateAssignment 
+            selectedCells={selectedCells}
+            assignmentBtn="text"
+          />
         </div>
       </div>
     </div>

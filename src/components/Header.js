@@ -1,9 +1,9 @@
 import React from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Box, MenuItem, Menu } from '@mui/material';
 import { Add, MailOutline, PersonOutline } from '@mui/icons-material';
-import ControlPanel from './ControlPanel';
+import CreateAssignment from './CreateAssignment';
 
-const Header = () => {
+const Header = ({ assignmentBtn }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -34,7 +34,7 @@ const Header = () => {
             <MenuItem onClick={handleClose}>2nd Floor</MenuItem>
           </Menu>
         </Box> */}
-        <ControlPanel />
+        <CreateAssignment assignmentBtn={assignmentBtn}/>
         <IconButton color="inherit">
           <MailOutline />
         </IconButton>
