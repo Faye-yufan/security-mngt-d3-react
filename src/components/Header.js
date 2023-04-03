@@ -18,22 +18,8 @@ const Header = ({ assignmentBtn }) => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Kiana
+          Kiana Workflow Management
         </Typography>
-        {/* <Box>
-          <IconButton onClick={handleClick}>
-            <Typography>Ground Floor</Typography>
-          </IconButton>
-          <Menu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem onClick={handleClose}>Ground Floor</MenuItem>
-            <MenuItem onClick={handleClose}>1st Floor</MenuItem>
-            <MenuItem onClick={handleClose}>2nd Floor</MenuItem>
-          </Menu>
-        </Box> */}
         <CreateAssignment assignmentBtn={assignmentBtn}/>
         <IconButton color="inherit">
           <MailOutline />
