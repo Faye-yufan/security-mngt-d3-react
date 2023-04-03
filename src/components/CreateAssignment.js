@@ -13,9 +13,15 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import Grid from '@mui/material/Grid';
+import { select } from 'd3';
 
-const CreateAssignment = ({ selectedCells, assignmentBtn }) => {
+const CreateAssignment = ({
+  selectedCells,
+  assignmentBtn,
+  onCreateAssignment,
+}) => {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [zone, setZone] = useState('');
   const [floorLevel, setFloorLevel] = useState('');
   const [devices, setDevices] = useState([{ deviceName: '', macAddress: '' }]);
   const [personnels, setPersonnels] = useState([
@@ -27,38 +33,6 @@ const CreateAssignment = ({ selectedCells, assignmentBtn }) => {
       phone: '',
     },
   ]);
-
-  const handleFloorLevelChange = (event) => {
-    setFloorLevel(event.target.value);
-  };
-
-  const handleDeviceChange = (index, field, value) => {
-    const newDevices = [...devices];
-    newDevices[index][field] = value;
-    setDevices(newDevices);
-  };
-
-  const addDevice = () => {
-    setDevices([...devices, { deviceName: '', macAddress: '' }]);
-  };
-
-  const removeDevice = (index) => {
-    setDevices(devices.filter((_, i) => i !== index));
-  };
-
-  const handlePersonnelChange = (index, field, value) => {
-    const newPersonnels = [...personnels];
-    newPersonnels[index][field] = value;
-    setPersonnels(newPersonnels);
-  };
-
-  const addPersonnel = () => {
-    setPersonnels([...personnels, { name: '', macAddress: '' }]);
-  };
-
-  const removePersonnel = (index) => {
-    setPersonnels(personnels.filter((_, i) => i !== index));
-  };
 
   const renderAssignBtn = () => {
     if (assignmentBtn === 'add') {
@@ -84,6 +58,67 @@ const CreateAssignment = ({ selectedCells, assignmentBtn }) => {
     }
   };
 
+  const handleFloorLevelChange = (event) => {
+    setFloorLevel(event.target.value);
+  };
+
+  const handleZoneChange = (event) => {
+    setZone(event.target.value);
+  };
+
+  const handleDeviceChange = (index, field, value) => {
+    const newDevices = [...devices];
+    newDevices[index][field] = value;
+    setDevices(newDevices);
+  };
+
+  const addDevice = () => {
+    setDevices([...devices, { deviceName: '', macAddress: '' }]);
+  };
+
+  const removeDevice = (index) => {
+    setDevices(devices.filter((_, i) => i !== index));
+  };
+
+  const handlePersonnelChange = (index, field, value) => {
+    const newPersonnels = [...personnels];
+    newPersonnels[index][field] = value;
+    setPersonnels(newPersonnels);
+  };
+
+  const addPersonnel = () => {
+    setPersonnels([
+      ...personnels,
+      { name: '', employeeID: '', macAddress: '', email: '', phone: '' },
+    ]);
+  };
+
+  const removePersonnel = (index) => {
+    setPersonnels(personnels.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = () => {
+    const newAssignment = {
+      zoneName: zone,
+      floorLevel: floorLevel,
+      responsiblePersonnel: [...personnels],
+    };
+    onCreateAssignment(newAssignment);
+    // Clear the form fields here if necessary
+    setZone('');
+    setFloorLevel('');
+    setPersonnels([
+      {
+        name: '',
+        employeeID: '',
+        macAddress: '',
+        email: '',
+        phone: '',
+      },
+    ]);
+    setDevices([{ deviceName: '', macAddress: '' }]);
+  };
+
   return (
     <>
       {renderAssignBtn()}
@@ -104,7 +139,7 @@ const CreateAssignment = ({ selectedCells, assignmentBtn }) => {
               onChange={handleFloorLevelChange}
               label="Floor Level"
             >
-              <MenuItem value="L0">Ground Floor</MenuItem>
+              <MenuItem value="Ground">Ground Floor</MenuItem>
               <MenuItem value="L1">1st Floor</MenuItem>
               <MenuItem value="L2">2nd Floor</MenuItem>
               <MenuItem value="L3">3rd Floor</MenuItem>
@@ -115,6 +150,7 @@ const CreateAssignment = ({ selectedCells, assignmentBtn }) => {
             variant="outlined"
             margin="normal"
             label="Zone Name"
+            onChange={handleZoneChange}
           />
           <TextField
             fullWidth
@@ -264,11 +300,7 @@ const CreateAssignment = ({ selectedCells, assignmentBtn }) => {
           <Button onClick={() => setDialogOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button
-            onClick={() => setDialogOpen(false)}
-            color="primary"
-            variant="contained"
-          >
+          <Button onClick={handleSubmit} color="primary" variant="contained">
             Submit
           </Button>
         </DialogActions>

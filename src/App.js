@@ -3,10 +3,16 @@ import InteractiveGrid from './components/InteractiveGrid';
 import CreateAssignment from './components/CreateAssignment';
 import DropdownList from './components/DropdownList';
 import Header from './components/Header';
+import AssignmentHistory from './components/AssignmentHistory';
 
 function App() {
   const [selectedCells, setSelectedCells] = useState([]);
   const [selectedOption, setSelectedOption] = useState('Ground Floor');
+  const [assignments, setAssignments] = useState([]);
+
+  const handleCreateAssignment = (newAssignment) => {
+    setAssignments((prevAssignments) => [...prevAssignments, newAssignment]);
+  };
 
   return (
     <div>
@@ -27,6 +33,10 @@ function App() {
           <CreateAssignment 
             selectedCells={selectedCells}
             assignmentBtn="text"
+            onCreateAssignment={handleCreateAssignment}
+          />
+          <AssignmentHistory 
+            assignments={assignments} 
           />
         </div>
       </div>
