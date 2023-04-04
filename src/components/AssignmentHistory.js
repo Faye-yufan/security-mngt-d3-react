@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, List, ListItem, ListItemText } from '@mui/material';
 
 const AssignmentHistory = ({ assignments }) => {
-  console.log(assignments);
   return (
     <div>
       <Typography variant="h5" gutterBottom>

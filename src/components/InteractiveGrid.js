@@ -5,8 +5,12 @@ import secondFloorImageUrl from '../asset/floor-2-first.png';
 import thirdFloorImageUrl from '../asset/floor-3-second.png';
 import fourthFloorImageUrl from '../asset/floor-4-third.png';
 
-
-const InteractiveGrid = ({ selectedCells, setSelectedCells, selectedOption }) => {
+const InteractiveGrid = ({
+  selectedCells,
+  setSelectedCells,
+  selectedOption,
+  assignments,
+}) => {
   const [gridSize, setGridSize] = useState(10);
   const svgRef = useRef();
   let updatedSelectedCells = selectedCells;
@@ -95,20 +99,56 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells, selectedOption }) =>
 
     drawGrid();
 
+    // render the assigned cells first
+    const renderAssignedCells = () => {
+      assignments.forEach((assignment) => {
+        assignment.selectedCells.forEach((cell) => {
+          const cellId = `cell-${cell.x}-${cell.y}`;
+          const existingCell = rectGroup.select(`#${cellId}`);
+
+          if (existingCell.empty()) {
+            rectGroup
+              .append('rect')
+              .attr('id', cellId)
+              .attr('x', xScale(cell.x))
+              .attr('y', yScale(cell.y))
+              .attr('width', xScale(1) - xScale(0))
+              .attr('height', yScale(1) - yScale(0))
+              .attr('fill', 'yellow')
+              .attr('opacity', 0.5);
+          }
+        });
+      });
+    };
+
+    renderAssignedCells();
+
     svg.on('click', (event) => {
       const coords = d3.pointer(event);
-
+    
       const x = Math.floor(xScale.invert(coords[0]));
       const y = Math.floor(yScale.invert(coords[1]));
-
+    
       const cellId = `cell-${x}-${y}`;
-
+      const assignedCells = assignments
+        .map((assignment) => assignment.selectedCells)
+        .reduce((acc, selectedCells) => acc.concat(selectedCells), []);
+    
       const existingCell = rectGroup.select(`#${cellId}`);
-
+    
       if (!existingCell.empty()) {
-        // If the cell is already highlighted, remove the highlight
-        existingCell.remove();
-        updatedSelectedCells = updatedSelectedCells.filter(cell => cell.x !== x || cell.y !== y);
+        // Check if the cell is assigned
+        const isAssigned = assignedCells.some(
+          (cell) => cell.x === x && cell.y === y
+        );
+    
+        // If the cell is already highlighted, and not being assigned, remove the highlight
+        if (!isAssigned) {
+          existingCell.remove();
+          updatedSelectedCells = updatedSelectedCells.filter(
+            (cell) => cell.x !== x || cell.y !== y
+          );
+        }
       } else {
         updatedSelectedCells = [...updatedSelectedCells, { x, y }];
         rectGroup
@@ -121,10 +161,10 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells, selectedOption }) =>
           .attr('fill', 'yellow')
           .attr('opacity', 0.5);
       }
-      setSelectedCells(prevSelectedCells => updatedSelectedCells);
+      setSelectedCells((prevSelectedCells) => updatedSelectedCells);
     });
     
-  }, [gridSize, selectedOption]);
+  }, [gridSize, selectedOption, assignments]);
 
   return (
     <div className="interactive-grid">
@@ -139,7 +179,6 @@ const InteractiveGrid = ({ selectedCells, setSelectedCells, selectedOption }) =>
         value={gridSize}
         onChange={(e) => setGridSize(+e.target.value)}
       />
-      
     </div>
   );
 };

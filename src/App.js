@@ -10,8 +10,8 @@ function App() {
   const [selectedOption, setSelectedOption] = useState('Ground Floor');
   const [assignments, setAssignments] = useState([]);
 
-  const handleCreateAssignment = (newAssignment) => {
-    setAssignments((prevAssignments) => [...prevAssignments, newAssignment]);
+  const handleCreateAssignment = (newAssignment, selectedCells) => {
+    setAssignments((prevAssignments) => [...prevAssignments, {...newAssignment, selectedCells},]);
   };
 
   return (
@@ -29,6 +29,7 @@ function App() {
             selectedCells={selectedCells}
             setSelectedCells={setSelectedCells}
             selectedOption={selectedOption}
+            assignments={assignments}
           />
           <CreateAssignment 
             selectedCells={selectedCells}

@@ -103,7 +103,7 @@ const CreateAssignment = ({
       floorLevel: floorLevel,
       responsiblePersonnel: [...personnels],
     };
-    onCreateAssignment(newAssignment);
+    onCreateAssignment(newAssignment, selectedCells);
     // Clear the form fields here if necessary
     setZone('');
     setFloorLevel('');
