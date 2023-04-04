@@ -100,9 +100,14 @@ const InteractiveGrid = ({
     drawGrid();
 
     // render the assigned cells first
+    // render the assigned cells first
     const renderAssignedCells = () => {
+      console.log(assignments);
       assignments.forEach((assignment) => {
-        assignment.selectedCells.forEach((cell) => {
+        const zoneName = assignment.zoneName;
+
+        let firstCellInAssignment;
+        assignment.selectedCells.forEach((cell, index) => {
           const cellId = `cell-${cell.x}-${cell.y}`;
           const existingCell = rectGroup.select(`#${cellId}`);
 
@@ -117,7 +122,33 @@ const InteractiveGrid = ({
               .attr('fill', 'yellow')
               .attr('opacity', 0.5);
           }
+
+          if (index === 0) {
+            firstCellInAssignment = cell;
+          }
         });
+
+        // Add the surrounding square
+        rectGroup
+          .append('rect')
+          .attr('class', 'zone-name-tag-bg')
+          .attr('x', xScale(firstCellInAssignment.x) + xScale(1) + 2 - 2) // Adjust the position as needed
+          .attr('y', yScale(firstCellInAssignment.y) + 2) // Adjust the position as needed
+          .attr('width', zoneName.length * 6 * 2) // Adjust the width based on the length of the zone name
+          .attr('height', 16) // Adjust the height as needed
+          .attr('fill', 'red')
+          .attr('opacity', 0.8);
+
+        // Add the zone name tag
+        rectGroup
+          .append('text')
+          .attr('class', 'zone-name-tag')
+          .attr('x', xScale(firstCellInAssignment.x) + xScale(1) + 2) // Adjust the position as needed
+          .attr('y', yScale(firstCellInAssignment.y) + 12) // Adjust the position as needed
+          .attr('font-size', '15px')
+          .attr('font-weight', 'bold')
+          .attr('fill', 'black')
+          .text(zoneName);
       });
     };
 
@@ -125,23 +156,23 @@ const InteractiveGrid = ({
 
     svg.on('click', (event) => {
       const coords = d3.pointer(event);
-    
+
       const x = Math.floor(xScale.invert(coords[0]));
       const y = Math.floor(yScale.invert(coords[1]));
-    
+
       const cellId = `cell-${x}-${y}`;
       const assignedCells = assignments
         .map((assignment) => assignment.selectedCells)
         .reduce((acc, selectedCells) => acc.concat(selectedCells), []);
-    
+
       const existingCell = rectGroup.select(`#${cellId}`);
-    
+
       if (!existingCell.empty()) {
         // Check if the cell is assigned
         const isAssigned = assignedCells.some(
           (cell) => cell.x === x && cell.y === y
         );
-    
+
         // If the cell is already highlighted, and not being assigned, remove the highlight
         if (!isAssigned) {
           existingCell.remove();
@@ -163,7 +194,6 @@ const InteractiveGrid = ({
       }
       setSelectedCells((prevSelectedCells) => updatedSelectedCells);
     });
-    
   }, [gridSize, selectedOption, assignments]);
 
   return (
