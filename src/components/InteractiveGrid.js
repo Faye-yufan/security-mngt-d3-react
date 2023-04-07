@@ -155,29 +155,44 @@ const InteractiveGrid = ({
 
     renderAssignedCells();
 
-    const plotDataPoints = () => {
-      console.log('data', dataPoints);
-      dataPoints.forEach((dataPoint) => {
-        const x = dataPoint.projected_norm_x;
-        const y = dataPoint.projected_norm_y;
-
-        // Plot the data point
-        rectGroup
-          .append('circle')
-          .attr('cx', x)
-          .attr('cy', height - y)
-          .attr('r', 2)
-          .attr('fill', 'blue')
-          .attr('opacity', 0.3)
-          .attr('pointer-events', 'none');
-      });
-    };
-
     const startPlottingDataPoints = () => {
-      if (dataPoints.length) {
-        plotDataPoints();
-        setTimeout(startPlottingDataPoints, 500);
-      }
+      const startTime = dataPoints[0].localtime; // get the start time of the data
+      const timeDiff = 500; // set the time interval to plot data
+      let currentIndex = 0;
+    
+      const plotDataPoints = () => {
+        // clear previous data points
+        rectGroup.selectAll('circle').remove();
+    
+        // get the current time window
+        const currentTime = startTime + currentIndex * timeDiff;
+        const currentData = dataPoints.filter((d) => d.localtime >= currentTime && d.localtime < currentTime + timeDiff);
+    
+        // plot the current data points
+        currentData.forEach((dataPoint) => {
+          const x = dataPoint.projected_norm_x;
+          const y = dataPoint.projected_norm_y;
+    
+          // Plot the data point
+          rectGroup
+            .append('circle')
+            .attr('cx', x)
+            .attr('cy', height - y)
+            .attr('r', 5)
+            .attr('fill', 'blue')
+            .attr('opacity', 0.8)
+            .attr('pointer-events', 'none');
+        });
+    
+        currentIndex++;
+    
+        // set timeout to plot the next data points
+        if (currentIndex * timeDiff < dataPoints.length) {
+          setTimeout(plotDataPoints, timeDiff);
+        }
+      };
+    
+      plotDataPoints();
     };
 
     if (startPlotting) {
