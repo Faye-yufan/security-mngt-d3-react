@@ -6,12 +6,15 @@ import thirdFloorImageUrl from '../asset/floor-3-second.png';
 import fourthFloorImageUrl from '../asset/floor-4-third.png';
 
 const InteractiveGrid = ({
+  dataPoints,
   selectedCells,
   setSelectedCells,
   selectedOption,
   assignments,
 }) => {
   const [gridSize, setGridSize] = useState(10);
+  const [startPlotting, setStartPlotting] = useState(false);
+  const [currentDataIndex, setCurrentDataIndex] = useState(0);
   const svgRef = useRef();
   let updatedSelectedCells = selectedCells;
 
@@ -100,9 +103,7 @@ const InteractiveGrid = ({
     drawGrid();
 
     // render the assigned cells first
-    // render the assigned cells first
     const renderAssignedCells = () => {
-      console.log(assignments);
       assignments.forEach((assignment) => {
         const zoneName = assignment.zoneName;
 
@@ -154,6 +155,35 @@ const InteractiveGrid = ({
 
     renderAssignedCells();
 
+    const plotDataPoints = () => {
+      console.log('data', dataPoints);
+      dataPoints.forEach((dataPoint) => {
+        const x = dataPoint.projected_norm_x;
+        const y = dataPoint.projected_norm_y;
+
+        // Plot the data point
+        rectGroup
+          .append('circle')
+          .attr('cx', x)
+          .attr('cy', height - y)
+          .attr('r', 2)
+          .attr('fill', 'blue')
+          .attr('opacity', 0.3)
+          .attr('pointer-events', 'none');
+      });
+    };
+
+    const startPlottingDataPoints = () => {
+      if (dataPoints.length) {
+        plotDataPoints();
+        setTimeout(startPlottingDataPoints, 500);
+      }
+    };
+
+    if (startPlotting) {
+      startPlottingDataPoints();
+    }
+
     svg.on('click', (event) => {
       const coords = d3.pointer(event);
 
@@ -194,12 +224,15 @@ const InteractiveGrid = ({
       }
       setSelectedCells((prevSelectedCells) => updatedSelectedCells);
     });
-  }, [gridSize, selectedOption, assignments]);
+  }, [gridSize, selectedOption, assignments, startPlotting]);
 
   return (
     <div className="interactive-grid">
       <svg ref={svgRef} />
       <br />
+      <button onClick={() => setStartPlotting(!startPlotting)}>
+        {startPlotting ? 'Stop' : 'Start'}
+      </button>
       <p>Adjust Selection Size</p>
       <input
         className="interactive-grid--toggle"

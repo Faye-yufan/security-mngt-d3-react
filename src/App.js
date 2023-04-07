@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import InteractiveGrid from './components/InteractiveGrid';
 import CreateAssignment from './components/CreateAssignment';
 import DropdownList from './components/DropdownList';
@@ -9,6 +9,13 @@ function App() {
   const [selectedCells, setSelectedCells] = useState([]);
   const [selectedOption, setSelectedOption] = useState('Ground Floor');
   const [assignments, setAssignments] = useState([]);
+  const [dataPoints, setDataPoints] = useState([]);
+
+  useEffect(() => {
+    fetch('/data_0910_1st_5min_500ms.json')
+      .then((response) => response.json())
+      .then((data) => setDataPoints(data));
+  }, []);
 
   const handleCreateAssignment = (newAssignment, selectedCells) => {
     setAssignments((prevAssignments) => [...prevAssignments, {...newAssignment, selectedCells},]);
@@ -26,6 +33,7 @@ function App() {
         />
         <div className="grid-container">
           <InteractiveGrid
+            dataPoints={dataPoints}
             selectedCells={selectedCells}
             setSelectedCells={setSelectedCells}
             selectedOption={selectedOption}
