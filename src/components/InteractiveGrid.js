@@ -155,10 +155,10 @@ const InteractiveGrid = ({
 
     renderAssignedCells();
 
-    const startPlottingDataPoints = () => {
+    const startPlottingDataPoints = (currentDataIndex) => {
       const startTime = dataPoints[0].localtime; // get the start time of the data
       const timeDiff = 500; // set the time interval to plot data
-      let currentIndex = 0;
+      let currentIndex = currentDataIndex;
     
       const plotDataPoints = () => {
         // clear previous data points
@@ -185,6 +185,7 @@ const InteractiveGrid = ({
         });
     
         currentIndex++;
+        setCurrentDataIndex(prevDataIndex => currentIndex);
     
         // set timeout to plot the next data points
         if (currentIndex * timeDiff < dataPoints.length) {
@@ -196,7 +197,7 @@ const InteractiveGrid = ({
     };
 
     if (startPlotting) {
-      startPlottingDataPoints();
+      startPlottingDataPoints(currentDataIndex);
     }
 
     svg.on('click', (event) => {
