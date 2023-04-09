@@ -102,6 +102,7 @@ const CreateAssignment = ({
       zoneName: zone,
       floorLevel: floorLevel,
       responsiblePersonnel: [...personnels],
+      devices: [...devices], 
     };
     onCreateAssignment(newAssignment, selectedCells);
     // Clear the form fields here if necessary

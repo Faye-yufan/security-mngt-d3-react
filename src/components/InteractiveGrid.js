@@ -11,6 +11,7 @@ const InteractiveGrid = ({
   setSelectedCells,
   selectedOption,
   assignments,
+  deviceColors,
 }) => {
   const [gridSize, setGridSize] = useState(10);
   const [startPlotting, setStartPlotting] = useState(false);
@@ -158,37 +159,42 @@ const InteractiveGrid = ({
     renderAssignedCells();
 
     const startPlottingDataPoints = (currentDataIndex) => {
-      const startTime = dataPoints[currentDataIndex+1].localtime; // get the start time of the data
+      const startTime = dataPoints[currentDataIndex + 1].localtime; // get the start time of the data
       const timeDiff = 500; // set the time interval to plot data
       let currentIndex = currentDataIndex;
-    
+
       const plotDataPoints = () => {
         if (!startPlottingRef.current) {
           return; // If the "Stop" button is clicked, stop the function execution
         }
-    
+
         // clear previous data points
         rectGroup.selectAll('circle').remove();
-    
+
         // get the current time window
         const currentTime = startTime + currentIndex * timeDiff;
-        const currentData = dataPoints.filter((d) => d.localtime >= currentTime && d.localtime < currentTime + timeDiff);
-    
+        const currentData = dataPoints.filter(
+          (d) =>
+            d.localtime >= currentTime && d.localtime < currentTime + timeDiff
+        );
+
         // plot the current data points
         currentData.forEach((dataPoint) => {
           const x = dataPoint.projected_norm_x;
           const y = dataPoint.projected_norm_y;
-    
+          const color = deviceColors[dataPoint.ClientMacAddr] || 'blue';
+          const size = deviceColors[dataPoint.ClientMacAddr] ? 9 : 5;
+
           // Plot the data point
           rectGroup
             .append('circle')
             .attr('cx', x)
             .attr('cy', height - y)
-            .attr('r', 5)
-            .attr('fill', 'blue')
+            .attr('r', size)
+            .attr('fill', color)
             .attr('opacity', 0.8)
             .attr('pointer-events', 'none');
-    
+
           // Update the timer display
           const timerDisplay = document.getElementById('timer');
           const date = new Date(dataPoint.localtime);
@@ -204,18 +210,20 @@ const InteractiveGrid = ({
           const londonTime = date.toLocaleString('en-GB', londonTimeOptions);
           const fractionalSeconds = date.getMilliseconds();
 
-          timerDisplay.textContent = `${londonTime}.${fractionalSeconds ? '5' : '0'}`;
+          timerDisplay.textContent = `${londonTime}.${
+            fractionalSeconds ? '5' : '0'
+          }`;
         });
-    
+
         currentIndex++;
         setCurrentDataIndex((prevDataIndex) => currentIndex);
-    
+
         // set timeout to plot the next data points
         if (currentIndex < dataPoints.length) {
           setTimeout(plotDataPoints, timeDiff);
         }
       };
-    
+
       plotDataPoints();
     };
 

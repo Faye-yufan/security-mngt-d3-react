@@ -10,6 +10,7 @@ function App() {
   const [selectedOption, setSelectedOption] = useState('Ground Floor');
   const [assignments, setAssignments] = useState([]);
   const [dataPoints, setDataPoints] = useState([]);
+  const [deviceColors, setDeviceColors] = useState({});
 
   useEffect(() => {
     fetch('/data_0910_1st_5min_500ms.json')
@@ -18,16 +19,24 @@ function App() {
   }, []);
 
   const handleCreateAssignment = (newAssignment, selectedCells) => {
-    setAssignments((prevAssignments) => [...prevAssignments, {...newAssignment, selectedCells},]);
+    setAssignments((prevAssignments) => [
+      ...prevAssignments,
+      { ...newAssignment, selectedCells },
+    ]);
+
+    // Set colors for the devices
+    const newDeviceColors = { ...deviceColors };
+    newAssignment.devices.forEach((device) => {
+      newDeviceColors[device.macAddress] = 'red';
+    });
+    setDeviceColors(newDeviceColors);
   };
 
   return (
     <div>
-      <Header 
-        assignmentBtn="add"
-      />
+      <Header assignmentBtn="add" />
       <div className="app-container">
-        <DropdownList 
+        <DropdownList
           selectedOption={selectedOption}
           setSelectedOption={setSelectedOption}
         />
@@ -38,15 +47,14 @@ function App() {
             setSelectedCells={setSelectedCells}
             selectedOption={selectedOption}
             assignments={assignments}
+            deviceColors={deviceColors}
           />
-          <CreateAssignment 
+          <CreateAssignment
             selectedCells={selectedCells}
             assignmentBtn="text"
             onCreateAssignment={handleCreateAssignment}
           />
-          <AssignmentHistory 
-            assignments={assignments} 
-          />
+          <AssignmentHistory assignments={assignments} />
         </div>
       </div>
     </div>
