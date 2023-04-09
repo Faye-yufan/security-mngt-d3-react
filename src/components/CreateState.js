@@ -202,47 +202,57 @@ const CreateState = ({ open, handleClose, handleSave }) => {
             </Button>
           </Grid>
           <p className="state--information-title">Step Messages</p>
-          <Grid container spacing={2}>
+          <Grid container item spacing={2}>
             {stateInfo.messages.map((message, index) => (
-              <Grid item xs={12} sm={10} key={index}>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={4}
-                  variant="outlined"
-                  margin="normal"
-                  label={`Step Message ${index + 1}`}
-                  value={message}
-                  onChange={(e) => handleMessagesChange(index, e.target.value)}
-                  readOnly={lockedMessages.includes(index)} // Conditionally apply readOnly prop
-                />
-                {lockedMessages.includes(index) ? (
-                  <IconButton
-                    color="secondary"
-                    onClick={() => {
-                      removeMessage(index);
-                      const newLockedMessages = lockedMessages.filter(
-                        (i) => i !== index
-                      );
-                      setLockedMessages(newLockedMessages);
-                    }}
-                  >
-                    <RemoveIcon />
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    color="primary"
-                    onClick={() => {
-                      if (stateInfo.messages.length < 4) {
-                        lockMessage(index);
-                        addMessage();
+              <Grid item xs={11} key={index}>
+                <Box display="flex" alignItems="center">
+                  <Box flexGrow={1}>
+                    <TextField
+                      fullWidth
+                      multiline
+                      rows={2}
+                      variant="outlined"
+                      margin="normal"
+                      label={`Step Message ${index + 1}`}
+                      value={message}
+                      onChange={(e) =>
+                        handleMessagesChange(index, e.target.value)
                       }
-                    }}
-                    disabled={message.length === 0}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                )}
+                      readOnly={lockedMessages.includes(index)}
+                    />
+                  </Box>
+                  {lockedMessages.includes(index) ? (
+                    <IconButton
+                      color="secondary"
+                      className="state--stepMessage--button"
+                      onClick={() => {
+                        removeMessage(index);
+                        const newLockedMessages = lockedMessages.filter(
+                          (i) => i !== index
+                        );
+                        setLockedMessages(newLockedMessages);
+                      }}
+                      style={{ marginLeft: "26px" }} 
+                    >
+                      <RemoveIcon />
+                    </IconButton>
+                  ) : (
+                    <IconButton
+                      color="primary"
+                      className="state--stepMessage--button"
+                      onClick={() => {
+                        if (stateInfo.messages.length < 4) {
+                          lockMessage(index);
+                          addMessage();
+                        }
+                      }}
+                      disabled={message.length === 0}
+                      style={{ marginLeft: "26px" }} 
+                    >
+                      <AddIcon />
+                    </IconButton>
+                  )}
+                </Box>
               </Grid>
             ))}
           </Grid>
