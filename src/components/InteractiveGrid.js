@@ -15,6 +15,7 @@ const InteractiveGrid = ({
   const [gridSize, setGridSize] = useState(10);
   const [startPlotting, setStartPlotting] = useState(false);
   const [currentDataIndex, setCurrentDataIndex] = useState(0);
+  const startPlottingRef = useRef(startPlotting);
   const svgRef = useRef();
   let updatedSelectedCells = selectedCells;
 
@@ -27,6 +28,7 @@ const InteractiveGrid = ({
       .attr('width', width)
       .attr('height', height);
 
+    startPlottingRef.current = startPlotting;
     const xScale = d3.scaleLinear().domain([0, gridSize]).range([0, width]);
 
     const yScale = d3.scaleLinear().domain([0, gridSize]).range([0, height]);
@@ -156,11 +158,15 @@ const InteractiveGrid = ({
     renderAssignedCells();
 
     const startPlottingDataPoints = (currentDataIndex) => {
-      const startTime = dataPoints[0].localtime; // get the start time of the data
+      const startTime = dataPoints[currentDataIndex+1].localtime; // get the start time of the data
       const timeDiff = 500; // set the time interval to plot data
       let currentIndex = currentDataIndex;
     
       const plotDataPoints = () => {
+        if (!startPlottingRef.current) {
+          return; // If the "Stop" button is clicked, stop the function execution
+        }
+    
         // clear previous data points
         rectGroup.selectAll('circle').remove();
     
@@ -182,13 +188,30 @@ const InteractiveGrid = ({
             .attr('fill', 'blue')
             .attr('opacity', 0.8)
             .attr('pointer-events', 'none');
+    
+          // Update the timer display
+          const timerDisplay = document.getElementById('timer');
+          const date = new Date(dataPoint.localtime);
+          const londonTimeOptions = {
+            timeZone: 'Europe/London',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          };
+          const londonTime = date.toLocaleString('en-GB', londonTimeOptions);
+          const fractionalSeconds = date.getMilliseconds();
+
+          timerDisplay.textContent = `${londonTime}.${fractionalSeconds ? '5' : '0'}`;
         });
     
         currentIndex++;
-        setCurrentDataIndex(prevDataIndex => currentIndex);
+        setCurrentDataIndex((prevDataIndex) => currentIndex);
     
         // set timeout to plot the next data points
-        if (currentIndex * timeDiff < dataPoints.length) {
+        if (currentIndex < dataPoints.length) {
           setTimeout(plotDataPoints, timeDiff);
         }
       };
@@ -245,6 +268,7 @@ const InteractiveGrid = ({
   return (
     <div className="interactive-grid">
       <svg ref={svgRef} />
+      <div id="timer" style={{ fontSize: '20px', fontWeight: 'bold' }}></div>
       <br />
       <button onClick={() => setStartPlotting(!startPlotting)}>
         {startPlotting ? 'Stop' : 'Start'}
