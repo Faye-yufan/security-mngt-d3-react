@@ -80,7 +80,7 @@ const CreateState = ({ open, handleClose, handleSave }) => {
 
   const removeMessage = (index) => {
     const newMessages = stateInfo.messages.filter((_, i) => i !== index);
-    setStateInfo({ ...stateInfo, message: newMessages });
+    setStateInfo({ ...stateInfo, messages: newMessages });
   };
 
   const handleSaveState = () => {
@@ -107,8 +107,12 @@ const CreateState = ({ open, handleClose, handleSave }) => {
             <Grid item xs={4}>
               <FormControl fullWidth variant="outlined" margin="normal">
                 <InputLabel id="priority-level-label">Priority</InputLabel>
-                <Select labelId="priority-level-label" label="Priority">
-                  {/* Add your menu items here */}
+                <Select
+                  labelId="priority-level-label"
+                  label="Priority"
+                  value={stateInfo.priority}
+                  onChange={(e) => handleChange('priority', e.target.value)}
+                >
                   <MenuItem value="low">Low</MenuItem>
                   <MenuItem value="medium">Medium</MenuItem>
                   <MenuItem value="high">High</MenuItem>
@@ -199,46 +203,49 @@ const CreateState = ({ open, handleClose, handleSave }) => {
           </Grid>
           <p className="state--information-title">Step Messages</p>
           <Grid container spacing={2}>
-  {stateInfo.messages.map((message, index) => (
-    <Grid item xs={12} sm={10} key={index}>
-      <TextField
-        fullWidth
-        multiline
-        rows={4}
-        variant="outlined"
-        margin="normal"
-        label={`Step Message ${index + 1}`}
-        value={message}
-        onChange={(e) => handleMessagesChange(index, e.target.value)}
-        readOnly={lockedMessages.includes(index)} // Conditionally apply readOnly prop
-      />
-      {lockedMessages.includes(index) ? (
-        <IconButton color="secondary" onClick={() => removeMessage(index)}>
-          <RemoveIcon />
-        </IconButton>
-      ) : (
-        <IconButton
-          color="primary"
-          onClick={() => lockMessage(index)}
-          disabled={message.length === 0}
-        >
-          <AddIcon />
-        </IconButton>
-      )}
-    </Grid>
-  ))}
-  {stateInfo.messages.length < 4 && (
-    <Grid item xs={12}>
-      <IconButton
-        color="primary"
-        onClick={addMessage}
-        disabled={stateInfo.messages[stateInfo.messages.length - 1].length === 0}
-      >
-        <AddIcon />
-      </IconButton>
-    </Grid>
-  )}
-</Grid>
+            {stateInfo.messages.map((message, index) => (
+              <Grid item xs={12} sm={10} key={index}>
+                <TextField
+                  fullWidth
+                  multiline
+                  rows={4}
+                  variant="outlined"
+                  margin="normal"
+                  label={`Step Message ${index + 1}`}
+                  value={message}
+                  onChange={(e) => handleMessagesChange(index, e.target.value)}
+                  readOnly={lockedMessages.includes(index)} // Conditionally apply readOnly prop
+                />
+                {lockedMessages.includes(index) ? (
+                  <IconButton
+                    color="secondary"
+                    onClick={() => {
+                      removeMessage(index);
+                      const newLockedMessages = lockedMessages.filter(
+                        (i) => i !== index
+                      );
+                      setLockedMessages(newLockedMessages);
+                    }}
+                  >
+                    <RemoveIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton
+                    color="primary"
+                    onClick={() => {
+                      if (stateInfo.messages.length < 4) {
+                        lockMessage(index);
+                        addMessage();
+                      }
+                    }}
+                    disabled={message.length === 0}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                )}
+              </Grid>
+            ))}
+          </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
