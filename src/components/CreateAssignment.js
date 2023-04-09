@@ -13,7 +13,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import InputLabel from '@mui/material/InputLabel';
 import Grid from '@mui/material/Grid';
-import { select } from 'd3';
+import CreateState from './CreateState';
 
 const CreateAssignment = ({
   selectedCells,
@@ -24,15 +24,8 @@ const CreateAssignment = ({
   const [zone, setZone] = useState('');
   const [floorLevel, setFloorLevel] = useState('');
   const [devices, setDevices] = useState([{ deviceName: '', macAddress: '' }]);
-  const [personnels, setPersonnels] = useState([
-    {
-      name: '',
-      employeeID: '',
-      macAddress: '',
-      email: '',
-      phone: '',
-    },
-  ]);
+  const [states, setStates] = useState([]);
+  const [createStateOpen, setCreateStateOpen] = useState(false);
 
   const renderAssignBtn = () => {
     if (assignmentBtn === 'add') {
@@ -80,44 +73,34 @@ const CreateAssignment = ({
     setDevices(devices.filter((_, i) => i !== index));
   };
 
-  const handlePersonnelChange = (index, field, value) => {
-    const newPersonnels = [...personnels];
-    newPersonnels[index][field] = value;
-    setPersonnels(newPersonnels);
-  };
-
-  const addPersonnel = () => {
-    setPersonnels([
-      ...personnels,
-      { name: '', employeeID: '', macAddress: '', email: '', phone: '' },
-    ]);
-  };
-
-  const removePersonnel = (index) => {
-    setPersonnels(personnels.filter((_, i) => i !== index));
-  };
-
   const handleSubmit = () => {
     const newAssignment = {
       zoneName: zone,
       floorLevel: floorLevel,
-      responsiblePersonnel: [...personnels],
-      devices: [...devices], 
+      devices: [...devices],
     };
     onCreateAssignment(newAssignment, selectedCells);
     // Clear the form fields here if necessary
     setZone('');
     setFloorLevel('');
-    setPersonnels([
-      {
-        name: '',
-        employeeID: '',
-        macAddress: '',
-        email: '',
-        phone: '',
-      },
-    ]);
     setDevices([{ deviceName: '', macAddress: '' }]);
+  };
+
+  const handleOpenCreateState = () => {
+    setCreateStateOpen(true);
+  };
+
+  const handleCloseCreateState = () => {
+    setCreateStateOpen(false);
+  };
+
+  const handleSaveState = (newState) => {
+    setStates([...states, newState]);
+  };
+
+  const removeState = (index) => {
+    const newStates = states.filter((_, i) => i !== index);
+    setStates(newStates);
   };
 
   return (
@@ -131,7 +114,7 @@ const CreateAssignment = ({
       >
         <DialogTitle>Create Assignment</DialogTitle>
         <DialogContent>
-          <p className="assignment--information-title">Zone</p>
+          <p className="assignment--information-title">Process Zone</p>
           <FormControl fullWidth variant="outlined" margin="normal">
             <InputLabel id="floor-level-label">Floor Level</InputLabel>
             <Select
@@ -150,7 +133,7 @@ const CreateAssignment = ({
             fullWidth
             variant="outlined"
             margin="normal"
-            label="Zone Name"
+            label="Process Name"
             onChange={handleZoneChange}
           />
           <TextField
@@ -210,92 +193,28 @@ const CreateAssignment = ({
           >
             Add Device
           </Button>
-          <p className="assignment--information-title">Personnel Information</p>
-          {personnels.map((personnel, index) => (
+          <p className="assignment--information-title">State Information</p>
+          {states.map((state, index) => (
             <div key={index}>
-              <p>Personnel {index + 1}</p>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    label="Name"
-                    value={personnel.name}
-                    onChange={(e) =>
-                      handlePersonnelChange(index, 'name', e.target.value)
-                    }
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    label="Employee ID"
-                    value={personnel.employeeID}
-                    onChange={(e) =>
-                      handlePersonnelChange(index, 'employeeID', e.target.value)
-                    }
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    label="MAC Address"
-                    value={personnel.macAddress}
-                    onChange={(e) =>
-                      handlePersonnelChange(index, 'macAddress', e.target.value)
-                    }
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    label="Email Address"
-                    value={personnel.email}
-                    onChange={(e) =>
-                      handlePersonnelChange(index, 'email', e.target.value)
-                    }
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    margin="normal"
-                    label="Phone Number"
-                    value={personnel.phone}
-                    onChange={(e) =>
-                      handlePersonnelChange(index, 'phone', e.target.value)
-                    }
-                  />
-                </Grid>
-                <Grid item>
-                  <IconButton
-                    color="secondary"
-                    onClick={() => removePersonnel(index)}
-                    disabled={personnels.length === 1}
-                  >
-                    <RemoveIcon />
-                  </IconButton>
-                </Grid>
-              </Grid>
+              <p>{state.name}</p>
+              <IconButton color="secondary" onClick={() => removeState(index)}>
+                <RemoveIcon />
+              </IconButton>
             </div>
           ))}
           <Button
-            variant="outlined"
+            variant="contained"
             color="primary"
             startIcon={<AddIcon />}
-            onClick={addPersonnel}
-            style={{ marginTop: '16px' }}
+            onClick={handleOpenCreateState}
           >
-            Add Personnel
+            Add State
           </Button>
+          <CreateState
+            open={createStateOpen}
+            handleClose={handleCloseCreateState}
+            handleSave={handleSaveState}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setDialogOpen(false)} color="primary">
