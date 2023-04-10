@@ -78,12 +78,14 @@ const CreateAssignment = ({
       zoneName: zone,
       floorLevel: floorLevel,
       devices: [...devices],
+      states: [...states],
     };
     onCreateAssignment(newAssignment, selectedCells);
     // Clear the form fields here if necessary
     setZone('');
     setFloorLevel('');
     setDevices([{ deviceName: '', macAddress: '' }]);
+    setStates([]);
   };
 
   const handleOpenCreateState = () => {

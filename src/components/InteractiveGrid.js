@@ -12,6 +12,7 @@ const InteractiveGrid = ({
   selectedOption,
   assignments,
   deviceColors,
+  onDataPointsForTime,
 }) => {
   const [gridSize, setGridSize] = useState(10);
   const [startPlotting, setStartPlotting] = useState(false);
@@ -178,12 +179,18 @@ const InteractiveGrid = ({
             d.localtime >= currentTime && d.localtime < currentTime + timeDiff
         );
 
+        // Check if the current time is 13:26:26
+        if (currentData.length !== 0 && currentData[0].localtime === 1568121986000){
+          onDataPointsForTime(currentData, assignments);
+        }
+
         // plot the current data points
         currentData.forEach((dataPoint) => {
           const x = dataPoint.projected_norm_x;
           const y = dataPoint.projected_norm_y;
-          const color = deviceColors[dataPoint.ClientMacAddr] || 'blue';
+          const color = deviceColors[dataPoint.ClientMacAddr] || (dataPoint['Staff ID'] !== 'nan' ? 'orange' :'blue');
           const size = deviceColors[dataPoint.ClientMacAddr] ? 9 : 5;
+          const alpha = deviceColors[dataPoint.ClientMacAddr] || (dataPoint['Staff ID'] !== 'nan' ? 1 : 0.5);
 
           // Plot the data point
           rectGroup
@@ -192,14 +199,14 @@ const InteractiveGrid = ({
             .attr('cy', height - y)
             .attr('r', size)
             .attr('fill', color)
-            .attr('opacity', 0.8)
+            .attr('opacity', alpha)
             .attr('pointer-events', 'none');
-
-          // Update the timer display
+          
+            // Update the timer display
           const timerDisplay = document.getElementById('timer');
           const date = new Date(dataPoint.localtime);
           const londonTimeOptions = {
-            timeZone: 'Europe/London',
+            timeZone: 'UTC',
             year: 'numeric',
             month: '2-digit',
             day: '2-digit',
@@ -207,7 +214,7 @@ const InteractiveGrid = ({
             minute: '2-digit',
             second: '2-digit',
           };
-          const londonTime = date.toLocaleString('en-GB', londonTimeOptions);
+          const londonTime = date.toLocaleString("en-GB", londonTimeOptions);
           const fractionalSeconds = date.getMilliseconds();
 
           timerDisplay.textContent = `${londonTime}.${
@@ -275,12 +282,13 @@ const InteractiveGrid = ({
 
   return (
     <div className="interactive-grid">
-      <svg ref={svgRef} />
-      <div id="timer" style={{ fontSize: '20px', fontWeight: 'bold' }}></div>
-      <br />
+      
       <button onClick={() => setStartPlotting(!startPlotting)}>
         {startPlotting ? 'Stop' : 'Start'}
       </button>
+      <div id="timer" style={{ fontSize: '20px', fontWeight: 'bold' }}></div>
+      <br />
+      <svg ref={svgRef} />
       <p>Adjust Selection Size</p>
       <input
         className="interactive-grid--toggle"

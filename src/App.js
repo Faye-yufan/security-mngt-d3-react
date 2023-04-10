@@ -4,6 +4,7 @@ import CreateAssignment from './components/CreateAssignment';
 import DropdownList from './components/DropdownList';
 import Header from './components/Header';
 import AssignmentHistory from './components/AssignmentHistory';
+import axios from "axios";
 
 function App() {
   const [selectedCells, setSelectedCells] = useState([]);
@@ -32,6 +33,17 @@ function App() {
     setDeviceColors(newDeviceColors);
   };
 
+  const handleDataPointsForTime = async (dataPoints, assignments) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/", { dataPoints, assignments });
+      // Handle the response from the Django backend
+      console.log(response.data);
+    } catch (error) {
+      // Handle any errors
+      console.error("Error sending data points:", error);
+    }
+  };
+
   return (
     <div>
       <Header assignmentBtn="add" />
@@ -48,6 +60,7 @@ function App() {
             selectedOption={selectedOption}
             assignments={assignments}
             deviceColors={deviceColors}
+            onDataPointsForTime={handleDataPointsForTime}
           />
           <CreateAssignment
             selectedCells={selectedCells}
