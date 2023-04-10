@@ -19,9 +19,9 @@ const AssignmentHistory = ({ assignments }) => {
                   </Typography>
                   <br />
                   <Typography component="span" variant="body2">
-                    Responsible Personnel:{' '}
-                    {assignment.responsiblePersonnel
-                      .map((personnel) => personnel.name)
+                    Devices:{' '}
+                    {assignment.devices
+                      .map((device) => device.name)
                       .join(', ')}
                   </Typography>
                   <br />

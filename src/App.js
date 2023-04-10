@@ -13,7 +13,7 @@ function App() {
   const [deviceColors, setDeviceColors] = useState({});
 
   useEffect(() => {
-    fetch('/data_0910_1st_5min_500ms.json')
+    fetch('/data_0910_3rd_5min_500ms.json')
       .then((response) => response.json())
       .then((data) => setDataPoints(data));
   }, []);
