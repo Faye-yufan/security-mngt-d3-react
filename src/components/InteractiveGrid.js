@@ -19,7 +19,7 @@ const InteractiveGrid = ({
   const [currentDataIndex, setCurrentDataIndex] = useState(0);
   const startPlottingRef = useRef(startPlotting);
   const svgRef = useRef();
-  let updatedSelectedCells = selectedCells;
+  let updatedSelectedCells = [...selectedCells];
 
   useEffect(() => {
     const width = 700;
@@ -129,6 +129,7 @@ const InteractiveGrid = ({
 
         let firstCellInAssignment;
         assignment.selectedCells.forEach((cell, index) => {
+          
           const cellId = `cell-${cell.x}-${cell.y}`;
           const existingCell = rectGroup.select(`#${cellId}`);
 
@@ -216,7 +217,6 @@ const InteractiveGrid = ({
           // Selected fixed device and the state has occurred
           const isFixedWithState =
             isInDeviceColors && dataPoint.localtime >= 1568121986000;
-          console.log(isFixedWithState);
           // is staff but not specifically for this device
           const isStaff = dataPoint['Staff ID'] !== 'nan';
 

@@ -1,7 +1,11 @@
 import React from 'react';
-import { Typography, List, ListItem, ListItemText } from '@mui/material';
+import { Typography, List, ListItem, ListItemText, Button } from '@mui/material';
 
-const AssignmentHistory = ({ assignments }) => {
+const AssignmentHistory = ({ 
+  assignments,
+  onEditAssignment,
+  onRemoveAssignment,
+ }) => {
   return (
     <div>
       <Typography variant="h5" gutterBottom>
@@ -20,14 +24,16 @@ const AssignmentHistory = ({ assignments }) => {
                   <br />
                   <Typography component="span" variant="body2">
                     Devices:{' '}
-                    {assignment.devices
-                      .map((device) => device.name)
-                      .join(', ')}
+                    {assignment.devices.map((device) => device.name).join(', ')}
                   </Typography>
                   <br />
                 </>
               }
             />
+            <Button onClick={() => onEditAssignment(index)}>Edit</Button>
+            <Button onClick={() => onRemoveAssignment(index)}>
+              Remove
+            </Button>
           </ListItem>
         ))}
       </List>

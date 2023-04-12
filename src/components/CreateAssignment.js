@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -17,15 +17,38 @@ import CreateState from './CreateState';
 
 const CreateAssignment = ({
   selectedCells,
+  setSelectedCells,
   assignmentBtn,
   onCreateAssignment,
+  assignmentToEdit,
+  formOpen,
+  setFormOpen,
 }) => {
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [zone, setZone] = useState('');
   const [floorLevel, setFloorLevel] = useState('');
   const [devices, setDevices] = useState([{ deviceName: '', macAddress: '' }]);
   const [states, setStates] = useState([]);
+  useEffect(() => {
+    if (assignmentToEdit) {
+      setZone(assignmentToEdit.zoneName);
+      setFloorLevel(assignmentToEdit.floorLevel);
+      setDevices(assignmentToEdit.devices);
+      setStates(assignmentToEdit.states);
+    } else {
+      setZone('');
+      setFloorLevel('');
+      setDevices([{ deviceName: '', macAddress: '' }]);
+      setStates([]);
+    }
+  }, [assignmentToEdit]);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [createStateOpen, setCreateStateOpen] = useState(false);
+
+  useEffect(() => {
+    if (assignmentToEdit) {
+      setSelectedCells(assignmentToEdit.selectedCells || []);
+    }
+  }, [assignmentToEdit, setSelectedCells]);
 
   const renderAssignBtn = () => {
     if (assignmentBtn === 'add') {
@@ -84,6 +107,7 @@ const CreateAssignment = ({
     // Clear the form fields here if necessary
     setZone('');
     setFloorLevel('');
+    setSelectedCells([]);
     setDevices([{ deviceName: '', macAddress: '' }]);
     setStates([]);
   };
@@ -109,8 +133,11 @@ const CreateAssignment = ({
     <>
       {renderAssignBtn()}
       <Dialog
-        open={dialogOpen}
-        onClose={() => setDialogOpen(false)}
+        open={dialogOpen || formOpen}
+        onClose={() => {
+          setDialogOpen(false);
+          setFormOpen(false);
+        }}
         fullWidth
         maxWidth="sm"
       >
@@ -136,6 +163,7 @@ const CreateAssignment = ({
             variant="outlined"
             margin="normal"
             label="Process Name"
+            value={zone}
             onChange={handleZoneChange}
           />
           <TextField
@@ -145,6 +173,7 @@ const CreateAssignment = ({
             label="Selected Zones"
             value={JSON.stringify(selectedCells)}
             InputProps={{ readOnly: true }}
+            disabled
           />
           <p className="assignment--information-title">Device Information</p>
           {devices.map((device, index) => (
@@ -219,7 +248,13 @@ const CreateAssignment = ({
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)} color="primary">
+          <Button
+            onClick={() => {
+              setDialogOpen(false);
+              setFormOpen(false);
+            }}
+            color="primary"
+          >
             Cancel
           </Button>
           <Button onClick={handleSubmit} color="primary" variant="contained">
