@@ -4499,6 +4499,19 @@
     },
     {
         "Level": "3rd Floor",
+        "ClientMacAddr": "80:58:f8:74:a5:44",
+        "lat": 51.4605178915,
+        "lng": -0.932795013,
+        "localtime": 1568121986500,
+        "Staff ID": "nan",
+        "process": "A",
+        "device_type": "fixed",
+        "Staff\/Device": "Heat Exchanger 3",
+        "projected_norm_x": 291.1370864761,
+        "projected_norm_y": 233.2169622733
+    },
+    {
+        "Level": "3rd Floor",
         "ClientMacAddr": "80:58:f8:c9:79:18",
         "lat": 51.4603952,
         "lng": -0.93276948,
@@ -4538,6 +4551,19 @@
     },
     {
         "Level": "3rd Floor",
+        "ClientMacAddr": "80:58:f8:74:a5:44",
+        "lat": 51.4605178915,
+        "lng": -0.932795013,
+        "localtime": 1568121987000,
+        "Staff ID": "nan",
+        "process": "A",
+        "device_type": "fixed",
+        "Staff\/Device": "Heat Exchanger 3",
+        "projected_norm_x": 291.1370864761,
+        "projected_norm_y": 233.2169622733
+    },
+    {
+        "Level": "3rd Floor",
         "ClientMacAddr": "80:58:f8:90:40:a8",
         "lat": 51.4603952,
         "lng": -0.93276948,
@@ -4561,6 +4587,19 @@
         "Staff\/Device": "Scientist",
         "projected_norm_x": 64.9391426876,
         "projected_norm_y": 167.5005244024
+    },
+    {
+        "Level": "3rd Floor",
+        "ClientMacAddr": "80:58:f8:74:a5:44",
+        "lat": 51.4605178915,
+        "lng": -0.932795013,
+        "localtime": 1568121987500,
+        "Staff ID": "nan",
+        "process": "A",
+        "device_type": "fixed",
+        "Staff\/Device": "Heat Exchanger 3",
+        "projected_norm_x": 291.1370864761,
+        "projected_norm_y": 233.2169622733
     },
     {
         "Level": "3rd Floor",
@@ -4681,6 +4720,19 @@
     },
     {
         "Level": "3rd Floor",
+        "ClientMacAddr": "80:58:f8:74:a5:44",
+        "lat": 51.4605178915,
+        "lng": -0.932795013,
+        "localtime": 1568121988500,
+        "Staff ID": "nan",
+        "process": "A",
+        "device_type": "fixed",
+        "Staff\/Device": "Heat Exchanger 3",
+        "projected_norm_x": 291.1370864761,
+        "projected_norm_y": 233.2169622733
+    },
+    {
+        "Level": "3rd Floor",
         "ClientMacAddr": "30:07:4d:84:b3:b5",
         "lat": 51.4605015912,
         "lng": -0.9323494411,
@@ -4756,6 +4808,19 @@
         "Staff\/Device": "Manufacturing Tech",
         "projected_norm_x": 336.1899682981,
         "projected_norm_y": 134.9117191627
+    },
+    {
+        "Level": "3rd Floor",
+        "ClientMacAddr": "80:58:f8:74:a5:44",
+        "lat": 51.4605178915,
+        "lng": -0.932795013,
+        "localtime": 1568121989500,
+        "Staff ID": "nan",
+        "process": "A",
+        "device_type": "fixed",
+        "Staff\/Device": "Heat Exchanger 3",
+        "projected_norm_x": 291.1370864761,
+        "projected_norm_y": 233.2169622733
     },
     {
         "Level": "3rd Floor",

@@ -38,6 +38,9 @@ const InteractiveGrid = ({
     // Create a group for the image
     const imageGroup = svg.append('g');
 
+    // Create a group for the overlay layer
+    const overlayGroup = svg.append('g');
+
     const backgroundImageUrl = () => {
       switch (selectedOption) {
         case 'Ground Floor':
@@ -61,6 +64,19 @@ const InteractiveGrid = ({
       .attr('width', width)
       .attr('height', height)
       .attr('pointer-events', 'none');
+    // Reorder the groups so that the overlay group is between the image group and the grid group
+    imageGroup.raise(); // Bring the image group to the top
+    overlayGroup.raise(); // Bring the overlay group to the top (above the image group)
+
+    // Add a semi-transparent white rectangle to the overlay group
+    overlayGroup
+      .append('rect')
+      .attr('x', 0)
+      .attr('y', 0)
+      .attr('width', width)
+      .attr('height', height)
+      .attr('fill', 'white')
+      .attr('opacity', 0.5);
 
     // Create a group for the grid lines
     const gridGroup = svg.append('g');
@@ -124,7 +140,7 @@ const InteractiveGrid = ({
               .attr('y', yScale(cell.y))
               .attr('width', xScale(1) - xScale(0))
               .attr('height', yScale(1) - yScale(0))
-              .attr('fill', 'yellow')
+              .attr('fill', '#CBC568')
               .attr('opacity', 0.5);
           }
 
@@ -138,10 +154,10 @@ const InteractiveGrid = ({
           .append('rect')
           .attr('class', 'zone-name-tag-bg')
           .attr('x', xScale(firstCellInAssignment.x) + xScale(1) + 2 - 2) // Adjust the position as needed
-          .attr('y', yScale(firstCellInAssignment.y) + 2) // Adjust the position as needed
+          .attr('y', yScale(firstCellInAssignment.y) - 20) // Adjust the position as needed
           .attr('width', zoneName.length * 6 * 2) // Adjust the width based on the length of the zone name
-          .attr('height', 16) // Adjust the height as needed
-          .attr('fill', 'red')
+          .attr('height', 25) // Adjust the height as needed
+          .attr('fill', '#DCDCDC')
           .attr('opacity', 0.8);
 
         // Add the zone name tag
@@ -149,10 +165,11 @@ const InteractiveGrid = ({
           .append('text')
           .attr('class', 'zone-name-tag')
           .attr('x', xScale(firstCellInAssignment.x) + xScale(1) + 2) // Adjust the position as needed
-          .attr('y', yScale(firstCellInAssignment.y) + 12) // Adjust the position as needed
-          .attr('font-size', '15px')
+          .attr('y', yScale(firstCellInAssignment.y) - 2) // Adjust the position as needed
+          .attr('font-size', '24px')
           .attr('font-weight', 'bold')
           .attr('fill', 'black')
+          .attr('opacity', 0.8)
           .text(zoneName);
       });
     };
@@ -180,7 +197,10 @@ const InteractiveGrid = ({
         );
 
         // Check if the current time is 13:26:26
-        if (currentData.length !== 0 && currentData[0].localtime === 1568121986000){
+        if (
+          currentData.length !== 0 &&
+          currentData[0].localtime === 1568121986000
+        ) {
           onDataPointsForTime(currentData, assignments);
         }
 
@@ -188,9 +208,46 @@ const InteractiveGrid = ({
         currentData.forEach((dataPoint) => {
           const x = dataPoint.projected_norm_x;
           const y = dataPoint.projected_norm_y;
-          const color = deviceColors[dataPoint.ClientMacAddr] || (dataPoint['Staff ID'] !== 'nan' ? 'orange' :'blue');
-          const size = deviceColors[dataPoint.ClientMacAddr] ? 9 : 5;
-          const alpha = deviceColors[dataPoint.ClientMacAddr] || (dataPoint['Staff ID'] !== 'nan' ? 1 : 0.5);
+          const isInDeviceColors = deviceColors[dataPoint.ClientMacAddr];
+
+          // Selected fixed device but the state has not occurred yet
+          const isFixedNormal =
+            isInDeviceColors && dataPoint.localtime < 1568121986000;
+          // Selected fixed device and the state has occurred
+          const isFixedWithState =
+            isInDeviceColors && dataPoint.localtime >= 1568121986000;
+          console.log(isFixedWithState);
+          // is staff but not specifically for this device
+          const isStaff = dataPoint['Staff ID'] !== 'nan';
+
+          let color, size, alpha, strokeWidth, stroke;
+
+          if (isFixedNormal) {
+            color = '#0096FF';
+            size = 8;
+            alpha = 1;
+            strokeWidth = 3;
+            stroke = 'black';
+          } else if (isFixedWithState) {
+            color = 'red';
+            size = 10;
+            alpha = 1;
+            strokeWidth = 2;
+            stroke = 'black';
+          } else if (isStaff) {
+            color = 'orange';
+            size = 7;
+            alpha = 1;
+            strokeWidth = 0;
+            stroke = 'transparent';
+          } else {
+            // Default case
+            color = 'black';
+            size = 5;
+            alpha = 0.5;
+            strokeWidth = 0;
+            stroke = 'transparent';
+          }
 
           // Plot the data point
           rectGroup
@@ -200,9 +257,11 @@ const InteractiveGrid = ({
             .attr('r', size)
             .attr('fill', color)
             .attr('opacity', alpha)
-            .attr('pointer-events', 'none');
-          
-            // Update the timer display
+            .attr('pointer-events', 'none')
+            .style('stroke', stroke)
+            .style('stroke-width', strokeWidth);
+
+          // Update the timer display
           const timerDisplay = document.getElementById('timer');
           const date = new Date(dataPoint.localtime);
           const londonTimeOptions = {
@@ -214,7 +273,7 @@ const InteractiveGrid = ({
             minute: '2-digit',
             second: '2-digit',
           };
-          const londonTime = date.toLocaleString("en-GB", londonTimeOptions);
+          const londonTime = date.toLocaleString('en-GB', londonTimeOptions);
           const fractionalSeconds = date.getMilliseconds();
 
           timerDisplay.textContent = `${londonTime}.${
@@ -273,7 +332,7 @@ const InteractiveGrid = ({
           .attr('y', yScale(y))
           .attr('width', xScale(1) - xScale(0))
           .attr('height', yScale(1) - yScale(0))
-          .attr('fill', 'yellow')
+          .attr('fill', '#CBC568')
           .attr('opacity', 0.5);
       }
       setSelectedCells((prevSelectedCells) => updatedSelectedCells);
@@ -282,7 +341,6 @@ const InteractiveGrid = ({
 
   return (
     <div className="interactive-grid">
-      
       <button onClick={() => setStartPlotting(!startPlotting)}>
         {startPlotting ? 'Stop' : 'Start'}
       </button>
