@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   TextField,
@@ -18,8 +18,15 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-const CreateState = ({ open, handleClose, handleSave }) => {
-  const [stateInfo, setStateInfo] = useState({
+const CreateState = ({
+  open,
+  handleClose,
+  handleSave,
+  stateToEdit,
+  stateFormOpen,
+  setStateFormOpen,
+}) => {
+  const initialState = {
     name: '',
     staff: [
       {
@@ -31,8 +38,18 @@ const CreateState = ({ open, handleClose, handleSave }) => {
     ],
     messages: [''],
     priority: '',
-  });
+  };
+
+  const [stateInfo, setStateInfo] = useState(initialState);
   const [lockedMessages, setLockedMessages] = useState([]);
+
+  useEffect(() => {
+    if (stateToEdit) {
+      setStateInfo(stateToEdit);
+    } else {
+      setStateInfo(initialState);
+    }
+  }, [stateToEdit]);
 
   const handleChange = (field, value) => {
     setStateInfo({ ...stateInfo, [field]: value });
@@ -232,7 +249,7 @@ const CreateState = ({ open, handleClose, handleSave }) => {
                         );
                         setLockedMessages(newLockedMessages);
                       }}
-                      style={{ marginLeft: "26px" }} 
+                      style={{ marginLeft: '26px' }}
                     >
                       <RemoveIcon />
                     </IconButton>
@@ -247,7 +264,7 @@ const CreateState = ({ open, handleClose, handleSave }) => {
                         }
                       }}
                       disabled={message.length === 0}
-                      style={{ marginLeft: "26px" }} 
+                      style={{ marginLeft: '26px' }}
                     >
                       <AddIcon />
                     </IconButton>

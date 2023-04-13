@@ -28,6 +28,11 @@ const CreateAssignment = ({
   const [floorLevel, setFloorLevel] = useState('');
   const [devices, setDevices] = useState([{ deviceName: '', macAddress: '' }]);
   const [states, setStates] = useState([]);
+  const [editingStateIndex, setEditingStateIndex] = useState(null);
+  const [stateFormOpen, setStateFormOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [createStateOpen, setCreateStateOpen] = useState(false);
+
   useEffect(() => {
     if (assignmentToEdit) {
       setZone(assignmentToEdit.zoneName);
@@ -41,8 +46,6 @@ const CreateAssignment = ({
       setStates([]);
     }
   }, [assignmentToEdit]);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [createStateOpen, setCreateStateOpen] = useState(false);
 
   useEffect(() => {
     if (assignmentToEdit) {
@@ -127,6 +130,15 @@ const CreateAssignment = ({
   const removeState = (index) => {
     const newStates = states.filter((_, i) => i !== index);
     setStates(newStates);
+  };
+
+  const openStateForm = () => {
+    setStateFormOpen(true);
+  };
+
+  const handleEditState = (index) => {
+    setEditingStateIndex(index);
+    openStateForm();
   };
 
   return (
@@ -231,6 +243,7 @@ const CreateAssignment = ({
               <IconButton color="secondary" onClick={() => removeState(index)}>
                 <RemoveIcon />
               </IconButton>
+              <Button onClick={() => handleEditState(index)}>Edit</Button>
             </div>
           ))}
           <Button
@@ -242,9 +255,17 @@ const CreateAssignment = ({
             Add State
           </Button>
           <CreateState
-            open={createStateOpen}
-            handleClose={handleCloseCreateState}
+            open={stateFormOpen}
+            handleClose={() => setStateFormOpen(false)}
             handleSave={handleSaveState}
+            onEditState={handleEditState}
+            stateToEdit={
+              editingStateIndex !== null
+                ? states[editingStateIndex]
+                : null
+            }
+            formOpen={stateFormOpen}
+            setFormOpen={setStateFormOpen}
           />
         </DialogContent>
         <DialogActions>
