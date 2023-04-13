@@ -17,6 +17,7 @@ const InteractiveGrid = ({
   const [gridSize, setGridSize] = useState(10);
   const [startPlotting, setStartPlotting] = useState(false);
   const [currentDataIndex, setCurrentDataIndex] = useState(0);
+  const [currentDataPoints, setCurrentDataPoints] = useState([]);
   const startPlottingRef = useRef(startPlotting);
   const svgRef = useRef();
   let updatedSelectedCells = [...selectedCells];
@@ -129,7 +130,6 @@ const InteractiveGrid = ({
 
         let firstCellInAssignment;
         assignment.selectedCells.forEach((cell, index) => {
-          
           const cellId = `cell-${cell.x}-${cell.y}`;
           const existingCell = rectGroup.select(`#${cellId}`);
 
@@ -177,6 +177,86 @@ const InteractiveGrid = ({
 
     renderAssignedCells();
 
+    // plot the current data points
+    const plotDataPoint = (rectGroup, dataPoint, deviceColors) => {
+      const x = dataPoint.projected_norm_x;
+      const y = dataPoint.projected_norm_y;
+      const isInDeviceColors = deviceColors[dataPoint.ClientMacAddr];
+      const staffOrDevice = dataPoint["Staff/Device"];
+    
+      // Selected fixed device but the state has not occurred yet
+      const isFixedNormal =
+        isInDeviceColors && dataPoint.localtime < 1568121986000;
+      // Selected fixed device and the state has occurred
+      const isFixedWithState =
+        isInDeviceColors && dataPoint.localtime >= 1568121986000;
+      // is staff but not specifically for this device
+      const isStaff = dataPoint['Staff ID'] !== 'nan';
+    
+      let color, size, alpha, strokeWidth, stroke;
+    
+      if (isFixedNormal) {
+        color = '#0096FF';
+        size = 8;
+        alpha = 1;
+        strokeWidth = 3;
+        stroke = 'black';
+      } else if (isFixedWithState) {
+        color = 'red';
+        size = 10;
+        alpha = 1;
+        strokeWidth = 2;
+        stroke = 'black';
+      } else if (isStaff) {
+        color = 'orange';
+        size = 7;
+        alpha = 1;
+        strokeWidth = 0;
+        stroke = 'transparent';
+      } else {
+        // Default case
+        color = 'black';
+        size = 5;
+        alpha = 0.5;
+        strokeWidth = 0;
+        stroke = 'transparent';
+      }
+    
+      // Show tooltip
+      const showTooltip = (event) => {
+        const tooltip = document.getElementById("tooltip");
+        const content = `
+          <strong>${staffOrDevice}</strong><br/>
+          ClientMacAddr: ${dataPoint.ClientMacAddr}`;
+    
+        tooltip.innerHTML = content;
+        tooltip.style.left = event.pageX + 10 + "px";
+        tooltip.style.top = event.pageY + 10 + "px";
+        tooltip.style.display = "block";
+      };
+    
+      // Hide tooltip
+      const hideTooltip = () => {
+        const tooltip = document.getElementById("tooltip");
+        tooltip.style.display = "none";
+      };
+    
+      // Plot the data point
+      rectGroup
+        .append('circle')
+        .attr('cx', x)
+        .attr('cy', height - y)
+        .attr('r', size)
+        .attr('fill', color)
+        .attr('opacity', alpha)
+        .attr('pointer-events', 'all')
+        .style('stroke', stroke)
+        .style('stroke-width', strokeWidth)
+        .on('mouseover', showTooltip)
+        .on('mousemove', showTooltip)
+        .on('mouseout', hideTooltip);
+    };    
+
     const startPlottingDataPoints = (currentDataIndex) => {
       const startTime = dataPoints[currentDataIndex + 1].localtime; // get the start time of the data
       const timeDiff = 500; // set the time interval to plot data
@@ -196,6 +276,7 @@ const InteractiveGrid = ({
           (d) =>
             d.localtime >= currentTime && d.localtime < currentTime + timeDiff
         );
+        setCurrentDataPoints((prevCurrentDataPoints) => currentData);
 
         // Check if the current time is 13:26:26
         if (
@@ -205,62 +286,8 @@ const InteractiveGrid = ({
           onDataPointsForTime(currentData, assignments);
         }
 
-        // plot the current data points
         currentData.forEach((dataPoint) => {
-          const x = dataPoint.projected_norm_x;
-          const y = dataPoint.projected_norm_y;
-          const isInDeviceColors = deviceColors[dataPoint.ClientMacAddr];
-
-          // Selected fixed device but the state has not occurred yet
-          const isFixedNormal =
-            isInDeviceColors && dataPoint.localtime < 1568121986000;
-          // Selected fixed device and the state has occurred
-          const isFixedWithState =
-            isInDeviceColors && dataPoint.localtime >= 1568121986000;
-          // is staff but not specifically for this device
-          const isStaff = dataPoint['Staff ID'] !== 'nan';
-
-          let color, size, alpha, strokeWidth, stroke;
-
-          if (isFixedNormal) {
-            color = '#0096FF';
-            size = 8;
-            alpha = 1;
-            strokeWidth = 3;
-            stroke = 'black';
-          } else if (isFixedWithState) {
-            color = 'red';
-            size = 10;
-            alpha = 1;
-            strokeWidth = 2;
-            stroke = 'black';
-          } else if (isStaff) {
-            color = 'orange';
-            size = 7;
-            alpha = 1;
-            strokeWidth = 0;
-            stroke = 'transparent';
-          } else {
-            // Default case
-            color = 'black';
-            size = 5;
-            alpha = 0.5;
-            strokeWidth = 0;
-            stroke = 'transparent';
-          }
-
-          // Plot the data point
-          rectGroup
-            .append('circle')
-            .attr('cx', x)
-            .attr('cy', height - y)
-            .attr('r', size)
-            .attr('fill', color)
-            .attr('opacity', alpha)
-            .attr('pointer-events', 'none')
-            .style('stroke', stroke)
-            .style('stroke-width', strokeWidth);
-
+          plotDataPoint(rectGroup, dataPoint, deviceColors);
           // Update the timer display
           const timerDisplay = document.getElementById('timer');
           const date = new Date(dataPoint.localtime);
@@ -295,6 +322,10 @@ const InteractiveGrid = ({
 
     if (startPlotting) {
       startPlottingDataPoints(currentDataIndex);
+    } else {
+      currentDataPoints.forEach((dataPoint) => {
+        plotDataPoint(rectGroup, dataPoint, deviceColors);
+      });
     }
 
     svg.on('click', (event) => {
@@ -356,6 +387,16 @@ const InteractiveGrid = ({
         value={gridSize}
         onChange={(e) => setGridSize(+e.target.value)}
       />
+      <div
+      id="tooltip"
+      style={{
+        position: 'absolute',
+        display: 'none',
+        background: 'rgba(255, 255, 255, 0.8)',
+        padding: '4px',
+        border: '1px solid #ccc',
+      }}
+    ></div>
     </div>
   );
 };
