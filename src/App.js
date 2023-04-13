@@ -14,6 +14,7 @@ function App() {
   const [dataPoints, setDataPoints] = useState([]);
   const [deviceColors, setDeviceColors] = useState({});
   const [formOpen, setFormOpen] = useState(false);
+  const [dataPointsForTimeCalled, setDataPointsForTimeCalled] = useState(false);
 
   useEffect(() => {
     fetch('/data_0910_3rd_5min_500ms.json')
@@ -51,6 +52,7 @@ function App() {
   };
 
   const handleDataPointsForTime = async (dataPoints, assignments) => {
+    setDataPointsForTimeCalled(true);
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/', {
         dataPoints,
@@ -62,11 +64,14 @@ function App() {
       // Handle any errors
       console.error('Error sending data points:', error);
     }
+    setDataPointsForTimeCalled(false);
   };
 
   return (
     <div>
-      <Header assignmentBtn="add" />
+      <Header 
+      assignmentBtn="add"
+      dataPointsForTimeCalled={dataPointsForTimeCalled} />
       <div className="app-container">
         <DropdownList
           selectedOption={selectedOption}
