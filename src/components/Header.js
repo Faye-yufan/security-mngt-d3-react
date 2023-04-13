@@ -58,7 +58,7 @@ const Header = ({ assignmentBtn, dataPointsForTimeCalled }) => {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          Kiana Security Management
+          Kiana Security & Workflow Management
         </Typography>
         <CreateAssignment assignmentBtn={assignmentBtn} />
         <IconButton color="inherit" onClick={handleDialogOpen}>
