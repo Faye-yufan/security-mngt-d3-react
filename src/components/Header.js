@@ -19,6 +19,7 @@ import {
   PersonOutline,
   Close as CloseIcon,
 } from '@mui/icons-material';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import CreateAssignment from './CreateAssignment';
 
 const Header = ({ assignmentBtn, dataPointsForTimeCalled }) => {
@@ -72,9 +73,15 @@ const Header = ({ assignmentBtn, dataPointsForTimeCalled }) => {
           open={snackbarOpen}
           autoHideDuration={6000}
           onClose={handleSnackbarClose}
-          message="New message received"
-          action={
-            <>
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          style={{ marginTop: '64px' }}
+        >
+          <MuiAlert
+            elevation={6}
+            variant="filled"
+            severity="warning"
+            onClose={handleSnackbarClose}
+            action={
               <IconButton
                 size="small"
                 aria-label="close"
@@ -83,9 +90,11 @@ const Header = ({ assignmentBtn, dataPointsForTimeCalled }) => {
               >
                 <CloseIcon fontSize="small" />
               </IconButton>
-            </>
-          }
-        />
+            }
+          >
+            New security alert!
+          </MuiAlert>
+        </Snackbar>
         <Dialog onClose={handleDialogClose} open={dialogOpen}>
           <DialogTitle>Mailbox</DialogTitle>
           <DialogContent>
