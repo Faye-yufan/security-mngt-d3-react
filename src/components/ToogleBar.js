@@ -5,6 +5,7 @@ import utc from 'dayjs-plugin-utc';
 dayjs.extend(utc);
 
 export default function ToggleBar({ dataPoints, onData }) {
+  console.log("ToggleBar input dataPoints: ", dataPoints)
   const [inputValue, setInputValue] = useState(1);
   const sendCurToParent = (data) => {
     onData(data);

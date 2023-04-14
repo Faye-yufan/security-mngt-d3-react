@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from "react";
-import InteractiveGrid from "./components/InteractiveGrid";
-import CreateAssignment from "./components/CreateAssignment";
-import DropdownList from "./components/DropdownList";
-import Header from "./components/Header";
-import ToggleBar from "./components/ToogleBar";
-import AssignmentHistory from "./components/AssignmentHistory";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import InteractiveGrid from './components/InteractiveGrid';
+import CreateAssignment from './components/CreateAssignment';
+import DropdownList from './components/DropdownList';
+import Header from './components/Header';
+import ToggleBar from './components/ToogleBar';
+import AssignmentHistory from './components/AssignmentHistory';
+import axios from 'axios';
 
 function App() {
   const [selectedCells, setSelectedCells] = useState([]);
-  const [selectedOption, setSelectedOption] = useState("3rd Floor");
+  const [selectedOption, setSelectedOption] = useState('3rd Floor');
   const [assignments, setAssignments] = useState([]);
   const [editingAssignmentIndex, setEditingAssignmentIndex] = useState(null);
   const [dataPoints, setDataPoints] = useState([]);
@@ -18,15 +18,15 @@ function App() {
   const [dataPointsForTimeCalled, setDataPointsForTimeCalled] = useState(false);
 
   useEffect(() => {
-    fetch("/data_0910_3rd_5min_500ms.json")
+    fetch('/data_0910_3rd_5min_500ms.json')
       .then((response) => response.json())
       .then((data) => setDataPoints(data));
   }, []);
 
   useEffect(() => {
-    const storedAssignments = localStorage.getItem("assignments");
-    const storedSelectedCells = localStorage.getItem("selectedCells");
-    const storedDeviceColors = localStorage.getItem("deviceColors");
+    const storedAssignments = localStorage.getItem('assignments');
+    const storedSelectedCells = localStorage.getItem('selectedCells');
+    const storedDeviceColors = localStorage.getItem('deviceColors');
 
     if (storedAssignments) {
       setAssignments(JSON.parse(storedAssignments));
@@ -39,7 +39,6 @@ function App() {
     if (storedDeviceColors) {
       setDeviceColors(JSON.parse(storedDeviceColors));
     }
-    console.log("deviceColors: ", deviceColors);
   }, []);
 
   const handleCreateAssignment = (newAssignment, selectedCells) => {
@@ -52,14 +51,14 @@ function App() {
     // Set colors for the devices
     const newDeviceColors = { ...deviceColors };
     newAssignment.devices.forEach((device) => {
-      newDeviceColors[device.macAddress] = "blue";
+      newDeviceColors[device.macAddress] = 'blue';
     });
     setDeviceColors(newDeviceColors);
 
     // Save the updated assignments and selected cells to local storage
-    localStorage.setItem("assignments", JSON.stringify(newAssignments));
-    localStorage.setItem("selectedCells", JSON.stringify(selectedCells));
-    localStorage.setItem("deviceColors", JSON.stringify(newDeviceColors));
+    localStorage.setItem('assignments', JSON.stringify(newAssignments));
+    localStorage.setItem('selectedCells', JSON.stringify(selectedCells));
+    localStorage.setItem('deviceColors', JSON.stringify(newDeviceColors));
   };
 
   const openCreateAssignmentForm = () => {
@@ -70,7 +69,7 @@ function App() {
     setEditingAssignmentIndex(index);
     openCreateAssignmentForm();
 
-    localStorage.setItem("assignments", JSON.stringify(assignments));
+    localStorage.setItem('assignments', JSON.stringify(assignments));
   };
 
   const handleRemoveAssignment = (index) => {
@@ -78,13 +77,13 @@ function App() {
     setAssignments(newAssignments);
 
     // Save the updated assignments to local storage
-    localStorage.setItem("assignments", JSON.stringify(newAssignments));
+    localStorage.setItem('assignments', JSON.stringify(newAssignments));
   };
 
   const handleDataPointsForTime = async (dataPoints, assignments) => {
     setDataPointsForTimeCalled(true);
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/", {
+      const response = await axios.post('http://127.0.0.1:8000/api/', {
         dataPoints,
         assignments,
       });
@@ -92,7 +91,7 @@ function App() {
       console.log(response.data);
     } catch (error) {
       // Handle any errors
-      console.error("Error sending data points:", error);
+      console.error('Error sending data points:', error);
     }
     setDataPointsForTimeCalled(false);
   };
@@ -101,9 +100,8 @@ function App() {
   const handleManualCurrentIdx = (data) => {
     setManualCurrentIdx(data);
   };
-  useEffect(()=>{
-    console.log(manualCurrentIdx, 'parent----')
-  },[manualCurrentIdx])
+  useEffect(() => {
+  }, [manualCurrentIdx]);
 
   return (
     <div>
@@ -125,6 +123,7 @@ function App() {
           />
         </div>
         <div className="grid-container">
+          <ToggleBar dataPoints={dataPoints} onData={handleManualCurrentIdx} />
           <DropdownList
             selectedOption={selectedOption}
             setSelectedOption={setSelectedOption}
@@ -148,7 +147,6 @@ function App() {
               onEditAssignment={handleEditAssignment}
               onRemoveAssignment={handleRemoveAssignment}
             />
-            <ToggleBar dataPoints={dataPoints} onData={handleManualCurrentIdx} />
           </div>
         </div>
       </div>

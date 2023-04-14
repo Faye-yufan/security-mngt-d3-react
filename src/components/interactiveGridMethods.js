@@ -248,7 +248,6 @@ export const handleAreaSelect = ({
       );
     }
   } else {
-    console.log(updatedSelectedCells, { x, y }, "180808");
     setUpdatedSelectedCells((prevUpdatedSelectedCells) => [
       ...prevUpdatedSelectedCells,
       { x, y },
@@ -281,18 +280,14 @@ export const drawCurData = ({
   height,
 }) => {
   if (!rectGroup || !dataPoints.length) return;
-
-  console.log(currentIndex,dataPoints, dataPoints[currentIndex + 1], "chart00000");
-  const startTime = dataPoints[currentIndex + 1].localtime;
+  const startTime = dataPoints[0].localtime;
   // clear previous data points
-  console.log('clear---')
   rectGroup.selectAll("circle").remove();
   // get the current time window
   const currentTime = startTime + currentIndex * TIME_GAP;
   const currentData = dataPoints.filter(
     (d) => d.localtime >= currentTime && d.localtime < currentTime + TIME_GAP
   );
-  console.log(currentData, 'chart00000chartCurrent')
   setCurrentDataPoints((prevCurrentDataPoints) => currentData);
   // Check if the current time is 13:26:26
   if (currentData.length !== 0 && currentData[0].localtime === 1568121986000) {

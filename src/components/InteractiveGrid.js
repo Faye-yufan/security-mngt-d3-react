@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState } from "react";
-import * as d3 from "d3";
-import { debounce } from "lodash";
+import React, { useRef, useEffect, useState } from 'react';
+import * as d3 from 'd3';
+import { debounce } from 'lodash';
 import {
   createImageGroup,
   createOverlayGroup,
@@ -11,7 +11,7 @@ import {
   drawCurData,
   backgroundImage,
   TIME_GAP,
-} from "./interactiveGridMethods";
+} from './interactiveGridMethods';
 
 const InteractiveGrid = ({
   dataPoints,
@@ -29,36 +29,37 @@ const InteractiveGrid = ({
   const [currentDataPoints, setCurrentDataPoints] = useState([]);
   const startPlottingRef = useRef(startPlotting);
   const svgRef = useRef();
+  const rectGroupRef = useRef();
   const [updatedSelectedCells, setUpdatedSelectedCells] = useState([
     ...selectedCells,
   ]);
 
   const backgroundImageUrl = backgroundImage(selectedOption);
 
-  const width = 600;
-  const height = 600;
+  const width = 700;
+  const height = 700;
   let svg = null;
+
   useEffect(() => {
-    svg = d3.select(svgRef.current).attr("width", width).attr("height", height);
+    const svg = d3
+      .select(svgRef.current)
+      .attr('width', width)
+      .attr('height', height);
 
     startPlottingRef.current = startPlotting;
     const xScale = d3.scaleLinear().domain([0, gridSize]).range([0, width]);
 
     const yScale = d3.scaleLinear().domain([0, gridSize]).range([0, height]);
-    // setRectGroup(svg.append("g"));
-    // Create a group for the image
+
     createImageGroup(svg, width, height, backgroundImageUrl);
 
-    // Create a group for the overlay layer
     createOverlayGroup(svg, width, height);
 
-    // Create a group for the grid lines
     createGripGroup({ svg, width, height, xScale, yScale, gridSize });
 
-    // Create a group for the rectangles
     const rectGroup = svg.append("g");
+    rectGroupRef.current = rectGroup; // Update the rectGroupRef
     createAssignedCells({ rectGroup, svg, assignments, xScale, yScale });
-
     const startPlottingDataPoints = (currentDataIndex) => {
       let currentIndex = currentDataIndex;
       const plotDataPoints = () => {
@@ -97,7 +98,7 @@ const InteractiveGrid = ({
       });
     }
 
-    svg.on("click", (event) => {
+    svg.on('click', (event) => {
       handleAreaSelect({
         event,
         xScale,
@@ -114,17 +115,13 @@ const InteractiveGrid = ({
   useEffect(() => {
     setSelectedCells(updatedSelectedCells);
   }, [updatedSelectedCells]);
-  const debounceCall = debounce(() => {
-    const svg = d3
-      .select(svgRef.current)
-      .attr("width", width)
-      .attr("height", height);
-    const rectGroup = svg?.append("g");
 
-    console.log(manualCurrentIdx, rectGroup, "chart");
+  const debounceCall = debounce(() => {
+    if (!rectGroupRef.current) return;
+
     drawCurData({
       currentIndex: manualCurrentIdx,
-      rectGroup,
+      rectGroup: rectGroupRef.current,
       dataPoints,
       setCurrentDataPoints,
       onDataPointsForTime,
@@ -132,8 +129,8 @@ const InteractiveGrid = ({
       deviceColors,
       height,
     });
-    // rectGroup.selectAll("circle").remove();
   }, 500);
+
   useEffect(() => {
     debounceCall();
   }, [manualCurrentIdx]);
@@ -144,9 +141,9 @@ const InteractiveGrid = ({
   return (
     <div className="interactive-grid">
       <button onClick={() => setStartPlotting(!startPlotting)}>
-        {startPlotting ? "Stop" : "Start"}
+        {startPlotting ? 'Stop' : 'Start'}
       </button>
-      <div id="timer" style={{ fontSize: "20px", fontWeight: "bold" }}></div>
+      <div id="timer" style={{ fontSize: '20px', fontWeight: 'bold' }}></div>
       <br />
       <svg ref={svgRef} />
       <p>Adjust Selection Size</p>
@@ -161,11 +158,11 @@ const InteractiveGrid = ({
       <div
         id="tooltip"
         style={{
-          position: "absolute",
-          display: "none",
-          background: "rgba(255, 255, 255, 0.8)",
-          padding: "4px",
-          border: "1px solid #ccc",
+          position: 'absolute',
+          display: 'none',
+          background: 'rgba(255, 255, 255, 0.8)',
+          padding: '4px',
+          border: '1px solid #ccc',
         }}
       ></div>
     </div>
