@@ -5,6 +5,7 @@ import DropdownList from './components/DropdownList';
 import Header from './components/Header';
 import ToggleBar from './components/ToogleBar';
 import AssignmentHistory from './components/AssignmentHistory';
+import Legend from './components/Legend';
 import axios from 'axios';
 
 function App() {
@@ -100,8 +101,7 @@ function App() {
   const handleManualCurrentIdx = (data) => {
     setManualCurrentIdx(data);
   };
-  useEffect(() => {
-  }, [manualCurrentIdx]);
+  useEffect(() => {}, [manualCurrentIdx]);
 
   return (
     <div>
@@ -110,6 +110,9 @@ function App() {
         dataPointsForTimeCalled={dataPointsForTimeCalled}
       />
       <div className="app-container">
+        <div>
+          <Legend />
+        </div>
         <div>
           <InteractiveGrid
             dataPoints={dataPoints}

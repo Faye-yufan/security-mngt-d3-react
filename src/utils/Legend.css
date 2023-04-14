@@ -1,0 +1,51 @@
+.legend-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .legend {
+    padding: 20px;
+    text-align: left;
+  }
+
+  .legend > ul > li {
+    margin-bottom: 20px; /* Added gap between list items */
+  }
+  
+  .legend > ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .legend-item {
+    display: inline-block;
+    margin-right: 20px; /* Increased spacing between list items */
+    border-radius: 50%;
+  }
+  
+  .unauthorized {
+    background-color: gray;
+    width: 10px;
+    height: 10px;
+  }
+  
+  .staff {
+    background-color: orange;
+    width: 15px;
+    height: 15px;
+  }
+  
+  .machine {
+    background-color: #0096FF;
+    border: 3.5px solid black;
+    width: 14px;
+    height: 14px;
+  }
+  
+  .issue {
+    background-color: red;
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid black;
+  }
+  
