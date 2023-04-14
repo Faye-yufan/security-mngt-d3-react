@@ -1,10 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
-import firstFloorImageUrl from "../asset/floor-1-ground.png";
-import secondFloorImageUrl from "../asset/floor-2-first.png";
-import thirdFloorImageUrl from "../asset/floor-3-second.png";
-import fourthFloorImageUrl from "../asset/floor-4-third.png";
-import { debounce } from "../utils/utils.js";
+import { debounce } from "lodash";
 import {
   createImageGroup,
   createOverlayGroup,
@@ -13,7 +9,8 @@ import {
   plotDataPoint,
   handleAreaSelect,
   drawCurData,
-  TIME_GAP
+  backgroundImage,
+  TIME_GAP,
 } from "./interactiveGridMethods";
 
 const InteractiveGrid = ({
@@ -24,6 +21,7 @@ const InteractiveGrid = ({
   assignments,
   deviceColors,
   onDataPointsForTime,
+  manualCurrentIdx,
 }) => {
   const [gridSize, setGridSize] = useState(14);
   const [startPlotting, setStartPlotting] = useState(false);
@@ -35,35 +33,19 @@ const InteractiveGrid = ({
     ...selectedCells,
   ]);
 
-  const backgroundImageUrl = () => {
-    switch (selectedOption) {
-      case "Ground Floor":
-        return firstFloorImageUrl;
-      case "1st Floor":
-        return secondFloorImageUrl;
-      case "2nd Floor":
-        return thirdFloorImageUrl;
-      case "3rd Floor":
-        return fourthFloorImageUrl;
-      default:
-        return firstFloorImageUrl;
-    }
-  };
+  const backgroundImageUrl = backgroundImage(selectedOption);
 
+  const width = 600;
+  const height = 600;
+  let svg = null;
   useEffect(() => {
-    const width = 600;
-    const height = 600;
-
-    const svg = d3
-      .select(svgRef.current)
-      .attr("width", width)
-      .attr("height", height);
+    svg = d3.select(svgRef.current).attr("width", width).attr("height", height);
 
     startPlottingRef.current = startPlotting;
     const xScale = d3.scaleLinear().domain([0, gridSize]).range([0, width]);
 
     const yScale = d3.scaleLinear().domain([0, gridSize]).range([0, height]);
-
+    // setRectGroup(svg.append("g"));
     // Create a group for the image
     createImageGroup(svg, width, height, backgroundImageUrl);
 
@@ -130,9 +112,31 @@ const InteractiveGrid = ({
 
   // update local selected cells
   useEffect(() => {
-    console.log(updatedSelectedCells, "180808");
     setSelectedCells(updatedSelectedCells);
   }, [updatedSelectedCells]);
+  const debounceCall = debounce(() => {
+    const svg = d3
+      .select(svgRef.current)
+      .attr("width", width)
+      .attr("height", height);
+    const rectGroup = svg?.append("g");
+
+    console.log(manualCurrentIdx, rectGroup, "chart");
+    drawCurData({
+      currentIndex: manualCurrentIdx,
+      rectGroup,
+      dataPoints,
+      setCurrentDataPoints,
+      onDataPointsForTime,
+      assignments,
+      deviceColors,
+      height,
+    });
+    // rectGroup.selectAll("circle").remove();
+  }, 500);
+  useEffect(() => {
+    debounceCall();
+  }, [manualCurrentIdx]);
 
   // size toggle bar handler
   const handelSizeChange = (e) => setGridSize(+e.target.value);

@@ -1,4 +1,8 @@
 import * as d3 from "d3";
+import firstFloorImageUrl from "../asset/floor-1-ground.png";
+import secondFloorImageUrl from "../asset/floor-2-first.png";
+import thirdFloorImageUrl from "../asset/floor-3-second.png";
+import fourthFloorImageUrl from "../asset/floor-4-third.png";
 // background
 export const createImageGroup = (svg, width, height, backgroundImageUrl) => {
   const imageGroup = svg.append("g");
@@ -276,14 +280,19 @@ export const drawCurData = ({
   deviceColors,
   height,
 }) => {
+  if (!rectGroup || !dataPoints.length) return;
+
+  console.log(currentIndex,dataPoints, dataPoints[currentIndex + 1], "chart00000");
   const startTime = dataPoints[currentIndex + 1].localtime;
   // clear previous data points
+  console.log('clear---')
   rectGroup.selectAll("circle").remove();
   // get the current time window
   const currentTime = startTime + currentIndex * TIME_GAP;
   const currentData = dataPoints.filter(
     (d) => d.localtime >= currentTime && d.localtime < currentTime + TIME_GAP
   );
+  console.log(currentData, 'chart00000chartCurrent')
   setCurrentDataPoints((prevCurrentDataPoints) => currentData);
   // Check if the current time is 13:26:26
   if (currentData.length !== 0 && currentData[0].localtime === 1568121986000) {
@@ -308,4 +317,19 @@ export const drawCurData = ({
 
     timerDisplay.textContent = `${londonTime}.${fractionalSeconds ? "5" : "0"}`;
   });
+};
+
+export const backgroundImage = (selectedOption) => {
+  switch (selectedOption) {
+    case "Ground Floor":
+      return firstFloorImageUrl;
+    case "1st Floor":
+      return secondFloorImageUrl;
+    case "2nd Floor":
+      return thirdFloorImageUrl;
+    case "3rd Floor":
+      return fourthFloorImageUrl;
+    default:
+      return firstFloorImageUrl;
+  }
 };

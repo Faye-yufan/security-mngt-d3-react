@@ -1,27 +1,42 @@
+import { Col, InputNumber, Row, Slider, Space } from "antd";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import utc from 'dayjs-plugin-utc';
+dayjs.extend(utc);
 
-
-export default function ToggleBar({handleOnChange, value}) {
+export default function ToggleBar({ dataPoints, onData }) {
+  const [inputValue, setInputValue] = useState(1);
+  const sendCurToParent = (data) => {
+    onData(data);
+  };
+  useEffect(() => {
+    sendCurToParent(inputValue);
+  }, [inputValue]);
+  const onChange = (newValue) => {
+    setInputValue(newValue);
+  };
+  const formatter = (value) =>
+    dayjs(dataPoints[value]?.localtime).utc().format("YYYY-MM-DD HH:mm:ss");
   return (
-    <div>
-      <p>Adjust Selection Size</p>
-      <input
-        className="interactive-grid--toggle"
-        type="range"
-        min="1"
-        max="50"
-        value={value}
-        onChange={handleOnChange}
-      />
-      <div
-        id="tooltip"
-        style={{
-          position: "absolute",
-          display: "none",
-          background: "rgba(255, 255, 255, 0.8)",
-          padding: "4px",
-          border: "1px solid #ccc",
-        }}
-      ></div>
-    </div>
+    <Row>
+      <Col span={12}>
+        <Slider
+          min={0}
+          max={dataPoints.length}
+          tooltip={{ formatter }}
+          onChange={onChange}
+          value={typeof inputValue === "number" ? inputValue : 0}
+        />
+      </Col>
+      <div style={{ width: "100px" }}>
+        <InputNumber
+          min={0}
+          max={dataPoints.length}
+          style={{ marginLeft: "16px", width: "200px" }}
+          value={formatter(inputValue)}
+          onChange={onChange}
+        />
+      </div>
+    </Row>
   );
 }

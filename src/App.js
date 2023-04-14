@@ -3,7 +3,7 @@ import InteractiveGrid from "./components/InteractiveGrid";
 import CreateAssignment from "./components/CreateAssignment";
 import DropdownList from "./components/DropdownList";
 import Header from "./components/Header";
-import ToggleBar from './components/ToogleBar';
+import ToggleBar from "./components/ToogleBar";
 import AssignmentHistory from "./components/AssignmentHistory";
 import axios from "axios";
 
@@ -97,6 +97,14 @@ function App() {
     setDataPointsForTimeCalled(false);
   };
 
+  const [manualCurrentIdx, setManualCurrentIdx] = useState(0);
+  const handleManualCurrentIdx = (data) => {
+    setManualCurrentIdx(data);
+  };
+  useEffect(()=>{
+    console.log(manualCurrentIdx, 'parent----')
+  },[manualCurrentIdx])
+
   return (
     <div>
       <Header
@@ -112,6 +120,7 @@ function App() {
             selectedOption={selectedOption}
             assignments={assignments}
             deviceColors={deviceColors}
+            manualCurrentIdx={manualCurrentIdx}
             onDataPointsForTime={handleDataPointsForTime}
           />
         </div>
@@ -139,7 +148,7 @@ function App() {
               onEditAssignment={handleEditAssignment}
               onRemoveAssignment={handleRemoveAssignment}
             />
-            <ToggleBar />
+            <ToggleBar dataPoints={dataPoints} onData={handleManualCurrentIdx} />
           </div>
         </div>
       </div>
