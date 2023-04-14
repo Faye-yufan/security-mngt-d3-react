@@ -29,7 +29,6 @@ const CreateAssignment = ({
   const [devices, setDevices] = useState([{ deviceName: '', macAddress: '' }]);
   const [states, setStates] = useState([]);
   const [editingStateIndex, setEditingStateIndex] = useState(null);
-  const [stateFormOpen, setStateFormOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createStateOpen, setCreateStateOpen] = useState(false);
   const [isEditingState, setIsEditingState] = useState(false);
@@ -134,14 +133,9 @@ const CreateAssignment = ({
     setStates(newStates);
   };
 
-  const openStateForm = () => {
-    setStateFormOpen(true);
-  };
-
   const handleEditState = (index) => {
     setEditingStateIndex(index);
     setIsEditingState(true);
-    openStateForm();
   };
 
   return (
