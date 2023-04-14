@@ -23,8 +23,6 @@ const CreateState = ({
   handleClose,
   handleSave,
   stateToEdit,
-  stateFormOpen,
-  setStateFormOpen,
 }) => {
   const initialState = {
     name: '',

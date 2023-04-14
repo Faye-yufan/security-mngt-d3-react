@@ -32,6 +32,7 @@ const CreateAssignment = ({
   const [stateFormOpen, setStateFormOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [createStateOpen, setCreateStateOpen] = useState(false);
+  const [isEditingState, setIsEditingState] = useState(false);
 
   useEffect(() => {
     if (assignmentToEdit) {
@@ -121,6 +122,7 @@ const CreateAssignment = ({
 
   const handleCloseCreateState = () => {
     setCreateStateOpen(false);
+    setIsEditingState(false);
   };
 
   const handleSaveState = (newState) => {
@@ -138,6 +140,7 @@ const CreateAssignment = ({
 
   const handleEditState = (index) => {
     setEditingStateIndex(index);
+    setIsEditingState(true);
     openStateForm();
   };
 
@@ -255,17 +258,14 @@ const CreateAssignment = ({
             Add State
           </Button>
           <CreateState
-            open={stateFormOpen}
-            handleClose={() => setStateFormOpen(false)}
+            open={createStateOpen || isEditingState}
+            handleClose={handleCloseCreateState}
             handleSave={handleSaveState}
-            onEditState={handleEditState}
             stateToEdit={
               editingStateIndex !== null
                 ? states[editingStateIndex]
                 : null
             }
-            formOpen={stateFormOpen}
-            setFormOpen={setStateFormOpen}
           />
         </DialogContent>
         <DialogActions>
