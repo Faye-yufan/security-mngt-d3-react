@@ -1,14 +1,14 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
@@ -16,14 +16,19 @@ code {
 .app-container {
   margin-top: 20px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  /* flex-direction: column; */
+  /* align-items: center; */
   gap: 16px;
 }
 
 .grid-container {
+  border: 1px solid red;
   display: flex;
+  padding-top: 60px;
+  margin-left: 20px;
   flex-direction: column;
+  /* justify-content: space-between; */
   align-items: center;
   gap: 16px;
 }
@@ -32,6 +37,9 @@ code {
   display: flex;
   flex-direction: row;
   gap: 50px;
+}
+.assignment-dialog{
+  margin-top: 60px;
 }
 
 .interactive-grid {
@@ -54,5 +62,5 @@ code {
 }
 
 .customSnackbar {
-  background-color: #f6786f; 
+  background-color: #f6786f;
 }

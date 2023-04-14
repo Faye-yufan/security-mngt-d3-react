@@ -139,9 +139,10 @@ const CreateAssignment = ({
   };
 
   return (
-    <>
+    <div  className='assignment-dialog'>
       {renderAssignBtn()}
       <Dialog
+       
         open={dialogOpen || formOpen}
         onClose={() => {
           setDialogOpen(false);
@@ -277,7 +278,7 @@ const CreateAssignment = ({
           </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </div>
   );
 };
 
