@@ -16,7 +16,7 @@ const InteractiveGrid = ({
 }) => {
   const [gridSize, setGridSize] = useState(14);
   const [startPlotting, setStartPlotting] = useState(false);
-  const [currentDataIndex, setCurrentDataIndex] = useState(0);
+  const [currentTimeIndex, setCurrentTimeIndex] = useState(0);
   const [currentDataPoints, setCurrentDataPoints] = useState([]);
   const startPlottingRef = useRef(startPlotting);
   const svgRef = useRef();
@@ -257,10 +257,10 @@ const InteractiveGrid = ({
         .on('mouseout', hideTooltip);
     };    
 
-    const startPlottingDataPoints = (currentDataIndex) => {
-      const startTime = dataPoints[currentDataIndex + 1].localtime; // get the start time of the data
+    const startPlottingDataPoints = (currentTimeIndex) => {
+      const startTime = dataPoints[0].localtime; // get the start time of the data
       const timeDiff = 500; // set the time interval to plot data
-      let currentIndex = currentDataIndex;
+      let currentIndex = currentTimeIndex;
 
       const plotDataPoints = () => {
         if (!startPlottingRef.current) {
@@ -309,7 +309,7 @@ const InteractiveGrid = ({
         });
 
         currentIndex++;
-        setCurrentDataIndex((prevDataIndex) => currentIndex);
+        setCurrentTimeIndex((prevDataIndex) => currentIndex);
 
         // set timeout to plot the next data points
         if (currentIndex < dataPoints.length) {
@@ -321,7 +321,7 @@ const InteractiveGrid = ({
     };
 
     if (startPlotting) {
-      startPlottingDataPoints(currentDataIndex);
+      startPlottingDataPoints(currentTimeIndex);
     } else {
       currentDataPoints.forEach((dataPoint) => {
         plotDataPoint(rectGroup, dataPoint, deviceColors);
