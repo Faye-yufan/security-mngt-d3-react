@@ -8,7 +8,7 @@ import axios from 'axios';
 
 function App() {
   const [selectedCells, setSelectedCells] = useState([]);
-  const [selectedOption, setSelectedOption] = useState('Ground Floor');
+  const [selectedOption, setSelectedOption] = useState('3rd Floor');
   const [assignments, setAssignments] = useState([]);
   const [editingAssignmentIndex, setEditingAssignmentIndex] = useState(null);
   const [dataPoints, setDataPoints] = useState([]);

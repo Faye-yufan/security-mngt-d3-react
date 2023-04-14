@@ -14,7 +14,7 @@ const InteractiveGrid = ({
   deviceColors,
   onDataPointsForTime,
 }) => {
-  const [gridSize, setGridSize] = useState(10);
+  const [gridSize, setGridSize] = useState(14);
   const [startPlotting, setStartPlotting] = useState(false);
   const [currentDataIndex, setCurrentDataIndex] = useState(0);
   const [currentDataPoints, setCurrentDataPoints] = useState([]);
