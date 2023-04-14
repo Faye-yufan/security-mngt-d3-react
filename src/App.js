@@ -22,11 +22,31 @@ function App() {
       .then((data) => setDataPoints(data));
   }, []);
 
+  useEffect(() => {
+    const storedAssignments = localStorage.getItem('assignments');
+    const storedSelectedCells = localStorage.getItem('selectedCells');
+    const storedDeviceColors = localStorage.getItem('deviceColors');
+
+    if (storedAssignments) {
+      setAssignments(JSON.parse(storedAssignments));
+    }
+
+    if (storedSelectedCells) {
+      setSelectedCells(JSON.parse(storedSelectedCells));
+    }
+
+    if (storedDeviceColors) {
+      setDeviceColors(JSON.parse(storedDeviceColors));
+    }
+    console.log('deviceColors: ', deviceColors);
+  }, []);
+
   const handleCreateAssignment = (newAssignment, selectedCells) => {
-    setAssignments((prevAssignments) => [
-      ...prevAssignments,
+    const newAssignments = [
+      ...assignments,
       { ...newAssignment, selectedCells },
-    ]);
+    ];
+    setAssignments(newAssignments);
 
     // Set colors for the devices
     const newDeviceColors = { ...deviceColors };
@@ -34,6 +54,11 @@ function App() {
       newDeviceColors[device.macAddress] = 'blue';
     });
     setDeviceColors(newDeviceColors);
+
+    // Save the updated assignments and selected cells to local storage
+    localStorage.setItem('assignments', JSON.stringify(newAssignments));
+    localStorage.setItem('selectedCells', JSON.stringify(selectedCells));
+    localStorage.setItem('deviceColors', JSON.stringify(newDeviceColors));
   };
 
   const openCreateAssignmentForm = () => {
@@ -43,12 +68,16 @@ function App() {
   const handleEditAssignment = (index) => {
     setEditingAssignmentIndex(index);
     openCreateAssignmentForm();
+
+    localStorage.setItem('assignments', JSON.stringify(assignments));
   };
 
   const handleRemoveAssignment = (index) => {
-    setAssignments((prevAssignments) =>
-      prevAssignments.filter((_, i) => i !== index)
-    );
+    const newAssignments = assignments.filter((_, i) => i !== index);
+    setAssignments(newAssignments);
+
+    // Save the updated assignments to local storage
+    localStorage.setItem('assignments', JSON.stringify(newAssignments));
   };
 
   const handleDataPointsForTime = async (dataPoints, assignments) => {
@@ -69,9 +98,10 @@ function App() {
 
   return (
     <div>
-      <Header 
-      assignmentBtn="add"
-      dataPointsForTimeCalled={dataPointsForTimeCalled} />
+      <Header
+        assignmentBtn="add"
+        dataPointsForTimeCalled={dataPointsForTimeCalled}
+      />
       <div className="app-container">
         <DropdownList
           selectedOption={selectedOption}
@@ -103,7 +133,6 @@ function App() {
           <AssignmentHistory
             assignments={assignments}
             onEditAssignment={handleEditAssignment}
-            
             onRemoveAssignment={handleRemoveAssignment}
           />
         </div>
