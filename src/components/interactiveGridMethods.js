@@ -1,32 +1,32 @@
-import * as d3 from "d3";
-import firstFloorImageUrl from "../asset/floor-1-ground.png";
-import secondFloorImageUrl from "../asset/floor-2-first.png";
-import thirdFloorImageUrl from "../asset/floor-3-second.png";
-import fourthFloorImageUrl from "../asset/floor-4-third.png";
+import * as d3 from 'd3';
+import firstFloorImageUrl from '../asset/floor-1-ground.png';
+import secondFloorImageUrl from '../asset/floor-2-first.png';
+import thirdFloorImageUrl from '../asset/floor-3-second.png';
+import fourthFloorImageUrl from '../asset/floor-4-third.png';
 // background
 export const createImageGroup = (svg, width, height, backgroundImageUrl) => {
-  const imageGroup = svg.append("g");
+  const imageGroup = svg.append('g');
   imageGroup
-    .append("image")
-    .attr("xlink:href", backgroundImageUrl)
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("width", width)
-    .attr("height", height)
-    .attr("pointer-events", "none");
+    .append('image')
+    .attr('xlink:href', backgroundImageUrl)
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', width)
+    .attr('height', height)
+    .attr('pointer-events', 'none');
   imageGroup.raise();
 };
 // Overlay
 export const createOverlayGroup = (svg, width, height) => {
-  const overlayGroup = svg.append("g");
+  const overlayGroup = svg.append('g');
   overlayGroup
-    .append("rect")
-    .attr("x", 0)
-    .attr("y", 0)
-    .attr("width", width)
-    .attr("height", height)
-    .attr("fill", "white")
-    .attr("opacity", 0.5);
+    .append('rect')
+    .attr('x', 0)
+    .attr('y', 0)
+    .attr('width', width)
+    .attr('height', height)
+    .attr('fill', 'white')
+    .attr('opacity', 0.5);
   overlayGroup.raise();
 };
 // Grid
@@ -38,38 +38,38 @@ export const createGripGroup = ({
   yScale,
   gridSize,
 }) => {
-  const gridGroup = svg.append("g");
-  gridGroup.selectAll(".grid-line").remove();
+  const gridGroup = svg.append('g');
+  gridGroup.selectAll('.grid-line').remove();
   const gridLines = d3.range(0, gridSize + 1);
   // Vertical lines
   gridGroup
-    .selectAll(".grid-line-vertical")
+    .selectAll('.grid-line-vertical')
     .data(gridLines)
     .enter()
-    .append("line")
-    .attr("class", "grid-line grid-line-vertical")
-    .attr("x1", (d) => xScale(d))
-    .attr("x2", (d) => xScale(d))
-    .attr("y1", 0)
-    .attr("y2", height)
-    .attr("stroke", "grey")
-    .attr("opacity", 0.6)
-    .attr("stroke-width", 1);
+    .append('line')
+    .attr('class', 'grid-line grid-line-vertical')
+    .attr('x1', (d) => xScale(d))
+    .attr('x2', (d) => xScale(d))
+    .attr('y1', 0)
+    .attr('y2', height)
+    .attr('stroke', 'grey')
+    .attr('opacity', 0.6)
+    .attr('stroke-width', 1);
 
   // Horizontal lines
   gridGroup
-    .selectAll(".grid-line-horizontal")
+    .selectAll('.grid-line-horizontal')
     .data(gridLines)
     .enter()
-    .append("line")
-    .attr("class", "grid-line grid-line-horizontal")
-    .attr("x1", 0)
-    .attr("x2", width)
-    .attr("y1", (d) => yScale(d))
-    .attr("y2", (d) => yScale(d))
-    .attr("stroke", "grey")
-    .attr("opacity", 0.6)
-    .attr("stroke-width", 1);
+    .append('line')
+    .attr('class', 'grid-line grid-line-horizontal')
+    .attr('x1', 0)
+    .attr('x2', width)
+    .attr('y1', (d) => yScale(d))
+    .attr('y2', (d) => yScale(d))
+    .attr('stroke', 'grey')
+    .attr('opacity', 0.6)
+    .attr('stroke-width', 1);
 };
 // AssignedCells
 export const createAssignedCells = ({
@@ -88,14 +88,14 @@ export const createAssignedCells = ({
 
       if (existingCell.empty()) {
         rectGroup
-          .append("rect")
-          .attr("id", cellId)
-          .attr("x", xScale(cell.x))
-          .attr("y", yScale(cell.y))
-          .attr("width", xScale(1) - xScale(0))
-          .attr("height", yScale(1) - yScale(0))
-          .attr("fill", "#CBC568")
-          .attr("opacity", 0.5);
+          .append('rect')
+          .attr('id', cellId)
+          .attr('x', xScale(cell.x))
+          .attr('y', yScale(cell.y))
+          .attr('width', xScale(1) - xScale(0))
+          .attr('height', yScale(1) - yScale(0))
+          .attr('fill', '#CBC568')
+          .attr('opacity', 0.5);
       }
 
       if (index === 0) {
@@ -105,25 +105,25 @@ export const createAssignedCells = ({
 
     // Add the surrounding square
     rectGroup
-      .append("rect")
-      .attr("class", "zone-name-tag-bg")
-      .attr("x", xScale(firstCellInAssignment.x) + xScale(1) + 2 - 2) // Adjust the position as needed
-      .attr("y", yScale(firstCellInAssignment.y) - 20) // Adjust the position as needed
-      .attr("width", zoneName.length * 6 * 2) // Adjust the width based on the length of the zone name
-      .attr("height", 25) // Adjust the height as needed
-      .attr("fill", "#DCDCDC")
-      .attr("opacity", 0.8);
+      .append('rect')
+      .attr('class', 'zone-name-tag-bg')
+      .attr('x', xScale(firstCellInAssignment.x) + xScale(1) + 2 - 2) // Adjust the position as needed
+      .attr('y', yScale(firstCellInAssignment.y) - 20) // Adjust the position as needed
+      .attr('width', zoneName.length * 6 * 2) // Adjust the width based on the length of the zone name
+      .attr('height', 25) // Adjust the height as needed
+      .attr('fill', '#DCDCDC')
+      .attr('opacity', 0.8);
 
     // Add the zone name tag
     rectGroup
-      .append("text")
-      .attr("class", "zone-name-tag")
-      .attr("x", xScale(firstCellInAssignment.x) + xScale(1) + 2) // Adjust the position as needed
-      .attr("y", yScale(firstCellInAssignment.y) - 2) // Adjust the position as needed
-      .attr("font-size", "24px")
-      .attr("font-weight", "bold")
-      .attr("fill", "black")
-      .attr("opacity", 0.8)
+      .append('text')
+      .attr('class', 'zone-name-tag')
+      .attr('x', xScale(firstCellInAssignment.x) + xScale(1) + 2) // Adjust the position as needed
+      .attr('y', yScale(firstCellInAssignment.y) - 2) // Adjust the position as needed
+      .attr('font-size', '24px')
+      .attr('font-weight', 'bold')
+      .attr('fill', 'black')
+      .attr('opacity', 0.8)
       .text(zoneName);
   });
 };
@@ -138,7 +138,7 @@ export const plotDataPoint = ({
   const x = dataPoint?.projected_norm_x;
   const y = dataPoint?.projected_norm_y;
   const isInDeviceColors = deviceColors[dataPoint.ClientMacAddr];
-  const staffOrDevice = dataPoint["Staff/Device"];
+  const staffOrDevice = dataPoint['Staff/Device'];
 
   // Selected fixed device but the state has not occurred yet
   const isFixedNormal = isInDeviceColors && dataPoint.localtime < 1568121986000;
@@ -146,70 +146,70 @@ export const plotDataPoint = ({
   const isFixedWithState =
     isInDeviceColors && dataPoint.localtime >= 1568121986000;
   // is staff but not specifically for this device
-  const isStaff = dataPoint["Staff ID"] !== "nan";
+  const isStaff = dataPoint['Staff ID'] !== 'nan';
 
   let color, size, alpha, strokeWidth, stroke;
 
   if (isFixedNormal) {
-    color = "#0096FF";
+    color = '#0096FF';
     size = 8;
     alpha = 1;
     strokeWidth = 3;
-    stroke = "black";
+    stroke = 'black';
   } else if (isFixedWithState) {
-    color = "red";
+    color = 'red';
     size = 10;
     alpha = 1;
     strokeWidth = 2;
-    stroke = "black";
+    stroke = 'black';
   } else if (isStaff) {
-    color = "orange";
+    color = 'orange';
     size = 7;
     alpha = 1;
     strokeWidth = 0;
-    stroke = "transparent";
+    stroke = 'transparent';
   } else {
     // Default case
-    color = "black";
+    color = 'black';
     size = 5;
     alpha = 0.5;
     strokeWidth = 0;
-    stroke = "transparent";
+    stroke = 'transparent';
   }
 
   // Show tooltip
   const showTooltip = (event) => {
-    const tooltip = document.getElementById("tooltip");
+    const tooltip = document.getElementById('tooltip');
     const content = `
         <strong>${staffOrDevice}</strong><br/>
         ClientMacAddr: ${dataPoint.ClientMacAddr}`;
 
     tooltip.innerHTML = content;
-    tooltip.style.left = event.pageX + 10 + "px";
-    tooltip.style.top = event.pageY + 10 + "px";
-    tooltip.style.display = "block";
+    tooltip.style.left = event.pageX + 10 + 'px';
+    tooltip.style.top = event.pageY + 10 + 'px';
+    tooltip.style.display = 'block';
   };
 
   // Hide tooltip
   const hideTooltip = () => {
-    const tooltip = document.getElementById("tooltip");
-    tooltip.style.display = "none";
+    const tooltip = document.getElementById('tooltip');
+    tooltip.style.display = 'none';
   };
 
   // Plot the data point
   rectGroup
-    .append("circle")
-    .attr("cx", x)
-    .attr("cy", height - y)
-    .attr("r", size)
-    .attr("fill", color)
-    .attr("opacity", alpha)
-    .attr("pointer-events", "all")
-    .style("stroke", stroke)
-    .style("stroke-width", strokeWidth)
-    .on("mouseover", showTooltip)
-    .on("mousemove", showTooltip)
-    .on("mouseout", hideTooltip);
+    .append('circle')
+    .attr('cx', x)
+    .attr('cy', height - y)
+    .attr('r', size)
+    .attr('fill', color)
+    .attr('opacity', alpha)
+    .attr('pointer-events', 'all')
+    .style('stroke', stroke)
+    .style('stroke-width', strokeWidth)
+    .on('mouseover', showTooltip)
+    .on('mousemove', showTooltip)
+    .on('mouseout', hideTooltip);
 };
 
 // handle area select
@@ -254,14 +254,14 @@ export const handleAreaSelect = ({
     ]);
 
     rectGroup
-      .append("rect")
-      .attr("id", cellId)
-      .attr("x", xScale(x))
-      .attr("y", yScale(y))
-      .attr("width", xScale(1) - xScale(0))
-      .attr("height", yScale(1) - yScale(0))
-      .attr("fill", "#CBC568")
-      .attr("opacity", 0.5);
+      .append('rect')
+      .attr('id', cellId)
+      .attr('x', xScale(x))
+      .attr('y', yScale(y))
+      .attr('width', xScale(1) - xScale(0))
+      .attr('height', yScale(1) - yScale(0))
+      .attr('fill', '#CBC568')
+      .attr('opacity', 0.5);
   }
 };
 
@@ -282,7 +282,7 @@ export const drawCurData = ({
   if (!rectGroup || !dataPoints.length) return;
   const startTime = dataPoints[0].localtime;
   // clear previous data points
-  rectGroup.selectAll("circle").remove();
+  rectGroup.selectAll('circle').remove();
   // get the current time window
   const currentTime = startTime + currentIndex * TIME_GAP;
   const currentData = dataPoints.filter(
@@ -296,33 +296,33 @@ export const drawCurData = ({
   currentData.forEach((dataPoint) => {
     plotDataPoint({ rectGroup, dataPoint, deviceColors, height });
     // Update the timer display
-    const timerDisplay = document.getElementById("timer");
+    const timerDisplay = document.querySelector('#timer > div');
     const date = new Date(dataPoint.localtime);
     const londonTimeOptions = {
-      timeZone: "UTC",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
+      timeZone: 'UTC',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
     };
-    const londonTime = date.toLocaleString("en-GB", londonTimeOptions);
+    const londonTime = date.toLocaleString('en-GB', londonTimeOptions);
     const fractionalSeconds = date.getMilliseconds();
 
-    timerDisplay.textContent = `${londonTime}.${fractionalSeconds ? "5" : "0"}`;
+    timerDisplay.textContent = `${londonTime}.${fractionalSeconds ? '5' : '0'}`;
   });
 };
 
 export const backgroundImage = (selectedOption) => {
   switch (selectedOption) {
-    case "Ground Floor":
+    case 'Ground Floor':
       return firstFloorImageUrl;
-    case "1st Floor":
+    case '1st Floor':
       return secondFloorImageUrl;
-    case "2nd Floor":
+    case '2nd Floor':
       return thirdFloorImageUrl;
-    case "3rd Floor":
+    case '3rd Floor':
       return fourthFloorImageUrl;
     default:
       return firstFloorImageUrl;

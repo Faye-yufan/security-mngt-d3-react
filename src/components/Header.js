@@ -48,7 +48,13 @@ const Header = ({ assignmentBtn, dataPointsForTimeCalled }) => {
     if (dataPointsForTimeCalled) {
       setMessages((prevMessages) => [
         ...prevMessages,
-        `New message: ${new Date().toLocaleString()}`,
+        (
+          <div>
+            <p><strong>Alert: Hazardous Leak Detected in Chemical Processing Zone</strong></p>
+            <p>An urgent message has been sent to the Manufacturing Tech.</p>
+            <p>Please ensure the affected zone is inspected.</p>
+          </div>
+        ),
       ]);
       setSnackbarOpen(true);
     }

@@ -139,7 +139,7 @@ const CreateAssignment = ({
   };
 
   return (
-    <div  className='assignment-dialog'>
+    <div className='assignment-dialog'>
       {renderAssignBtn()}
       <Dialog
        

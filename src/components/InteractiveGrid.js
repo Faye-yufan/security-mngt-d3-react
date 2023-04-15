@@ -1,6 +1,10 @@
 import React, { useRef, useEffect, useState } from 'react';
 import * as d3 from 'd3';
 import { debounce } from 'lodash';
+import { Box, IconButton, Typography } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
+
 import {
   createImageGroup,
   createOverlayGroup,
@@ -57,7 +61,7 @@ const InteractiveGrid = ({
 
     createGripGroup({ svg, width, height, xScale, yScale, gridSize });
 
-    const rectGroup = svg.append("g");
+    const rectGroup = svg.append('g');
     rectGroupRef.current = rectGroup; // Update the rectGroupRef
     createAssignedCells({ rectGroup, svg, assignments, xScale, yScale });
     const startPlottingDataPoints = (currentDataIndex) => {
@@ -140,11 +144,20 @@ const InteractiveGrid = ({
 
   return (
     <div className="interactive-grid">
-      <button onClick={() => setStartPlotting(!startPlotting)}>
-        {startPlotting ? 'Stop' : 'Start'}
-      </button>
-      <div id="timer" style={{ fontSize: '20px', fontWeight: 'bold' }}></div>
-      <br />
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <IconButton onClick={() => setStartPlotting(!startPlotting)}>
+          {startPlotting ? <StopIcon /> : <PlayArrowIcon />}
+        </IconButton>
+        <Box
+          id="timer"
+          sx={{
+            fontSize: '16px',
+            marginLeft: '8px',
+          }}
+        >
+          <Typography variant="p" component="div"></Typography>
+        </Box>
+      </Box>
       <svg ref={svgRef} />
       <p>Adjust Selection Size</p>
       <input

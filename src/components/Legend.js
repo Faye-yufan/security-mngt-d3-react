@@ -5,7 +5,6 @@ const Legend = () => {
   return (
     <div className="legend-container">
       <div className="legend">
-        <h4>Legend</h4>
         <ul>
           <li>
             <span className="legend-item machine"></span> Machine of Interest

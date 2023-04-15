@@ -10,7 +10,7 @@ function DropdownList({ selectedOption, setSelectedOption }) {
   };
 
   return (
-    <div>
+    <div className="floor-drop-down-list">
       <FormControl fullWidth variant="outlined">
         <InputLabel id="floor-level-label">Floor Level</InputLabel>
         <Select

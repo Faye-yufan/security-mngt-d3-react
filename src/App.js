@@ -1,4 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import {
+  ThemeProvider,
+  createTheme,
+  CssBaseline,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Typography,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import InteractiveGrid from './components/InteractiveGrid';
 import CreateAssignment from './components/CreateAssignment';
 import DropdownList from './components/DropdownList';
@@ -103,56 +113,86 @@ function App() {
   };
   useEffect(() => {}, [manualCurrentIdx]);
 
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#1976d2',
+      },
+    },
+  });
+
   return (
     <div>
       <Header
         assignmentBtn="add"
         dataPointsForTimeCalled={dataPointsForTimeCalled}
       />
-      <div className="app-container">
-        <div>
-          <Legend />
-        </div>
-        <div>
-          <InteractiveGrid
-            dataPoints={dataPoints}
-            selectedCells={selectedCells}
-            setSelectedCells={setSelectedCells}
-            selectedOption={selectedOption}
-            assignments={assignments}
-            deviceColors={deviceColors}
-            manualCurrentIdx={manualCurrentIdx}
-            onDataPointsForTime={handleDataPointsForTime}
-          />
-        </div>
-        <div className="grid-container">
-          <ToggleBar dataPoints={dataPoints} onData={handleManualCurrentIdx} />
-          <DropdownList
-            selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
-          />
-          <div className="assignment">
-            <CreateAssignment
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div className="app-container">
+          <div>
+            <Legend />
+          </div>
+
+          <div>
+            <div className="floor-dropdown-container">
+              <DropdownList
+                selectedOption={selectedOption}
+                setSelectedOption={setSelectedOption}
+              />
+            </div>
+            <InteractiveGrid
+              dataPoints={dataPoints}
               selectedCells={selectedCells}
               setSelectedCells={setSelectedCells}
-              assignmentBtn="text"
-              onCreateAssignment={handleCreateAssignment}
-              assignmentToEdit={
-                editingAssignmentIndex !== null
-                  ? assignments[editingAssignmentIndex]
-                  : null
-              }
-              formOpen={formOpen}
-              setFormOpen={setFormOpen}
-            />
-            <AssignmentHistory
+              selectedOption={selectedOption}
               assignments={assignments}
-              onEditAssignment={handleEditAssignment}
-              onRemoveAssignment={handleRemoveAssignment}
+              deviceColors={deviceColors}
+              manualCurrentIdx={manualCurrentIdx}
+              onDataPointsForTime={handleDataPointsForTime}
             />
           </div>
+          <div className="controlPanel-container">
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Select Time</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <ToggleBar
+                  dataPoints={dataPoints}
+                  onData={handleManualCurrentIdx}
+                />
+              </AccordionDetails>
+            </Accordion>
+
+            <Accordion>
+              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <Typography>Assignment</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <CreateAssignment
+                  selectedCells={selectedCells}
+                  setSelectedCells={setSelectedCells}
+                  assignmentBtn="text"
+                  onCreateAssignment={handleCreateAssignment}
+                  assignmentToEdit={
+                    editingAssignmentIndex !== null
+                      ? assignments[editingAssignmentIndex]
+                      : null
+                  }
+                  formOpen={formOpen}
+                  setFormOpen={setFormOpen}
+                />
+                <AssignmentHistory
+                  assignments={assignments}
+                  onEditAssignment={handleEditAssignment}
+                  onRemoveAssignment={handleRemoveAssignment}
+                />
+              </AccordionDetails>
+            </Accordion>
+          </div>
         </div>
-      </div>
+      </ThemeProvider>
     </div>
   );
 }

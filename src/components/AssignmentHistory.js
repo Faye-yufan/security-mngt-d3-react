@@ -1,13 +1,20 @@
 import React from 'react';
-import { Typography, List, ListItem, ListItemText, Button } from '@mui/material';
+import {
+  Box,
+  Typography,
+  List,
+  ListItem,
+  ListItemText,
+  Button,
+} from '@mui/material';
 
-const AssignmentHistory = ({ 
+const AssignmentHistory = ({
   assignments,
   onEditAssignment,
   onRemoveAssignment,
- }) => {
+}) => {
   return (
-    <div>
+    <div className="assignment-history">
       <Typography variant="h5" gutterBottom>
         Assignment History
       </Typography>
@@ -30,10 +37,10 @@ const AssignmentHistory = ({
                 </>
               }
             />
-            <Button onClick={() => onEditAssignment(index)}>Edit</Button>
-            <Button onClick={() => onRemoveAssignment(index)}>
-              Remove
-            </Button>
+            <Box sx={{ display: 'flex', flexDirection: 'column', mt: 2 }}>
+              <Button onClick={() => onEditAssignment(index)}>Edit</Button>
+              <Button onClick={() => onRemoveAssignment(index)}>Remove</Button>
+            </Box>
           </ListItem>
         ))}
       </List>
